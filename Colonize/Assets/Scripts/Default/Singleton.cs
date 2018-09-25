@@ -3,15 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace SingletonPattern {
-	public class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour {
+	public abstract class Singleton<T> where T : class {
 		protected static T instance = null;
 		public static T Instance {
 			get {
-				instance = FindObjectOfType (typeof(T)) as T;
-	
 				if(instance == null) {
-					instance = new GameObject("@" + typeof(T).ToString(), typeof(T)).GetComponent<T>();
-					DontDestroyOnLoad(instance);
+					instance = System.Activator.CreateInstance(typeof(T)) as T;
 				}
 				return instance;
 			}
