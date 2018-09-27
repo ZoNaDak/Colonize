@@ -23,9 +23,8 @@ namespace Map {
 					}
 				}
 			} catch(System.NullReferenceException ex) {
-				Debug.LogError("Error : LandPrefab is null");
+				throw ex;
 			} catch(System.Exception ex) {
-				Debug.LogError("Error : Can't Create Lands");
 				throw ex;
 			}
 			
