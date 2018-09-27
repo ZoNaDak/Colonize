@@ -7,27 +7,30 @@ namespace Map {
 		private List<LandController> landList = new List<LandController>(landNum);
 		private const int landNum = 25;
 		private const int landX_Num = 5;
-		private const float posZ = 10.0f;
+
+		public int LandNum { get {return landNum; } }
+		public int LandX_Num { get {return landX_Num; } }
 
 		void Awake() {
 			try {
 				GameObject landPrefab = Prefab.PrefabFactory.Instance.CreatePrefab("Lands", "BasicLand", false);
 				float landSize = landPrefab.transform.localScale.x;
-				if(landPrefab != null) {
-					for(int i = 0; i < landNum; ++i) {
-						LandController land = Instantiate(landPrefab
-							, new Vector3(landSize * (i%landX_Num), landSize * (i/landX_Num) ,posZ)
-							, Quaternion.identity
-							, this.transform).GetComponentInChildren<LandController>();
-						this.landList.Add(land);
-					}
+				this.transform.Translate(landSize * 0.5f, landSize * 0.5f, 0.0f);
+				for(int i = 0; i < landNum; ++i) {
+					LandController land = Instantiate(landPrefab
+						, new Vector3(
+							this.transform.position.x + landSize * (i%landX_Num)
+							, this.transform.position.y + landSize * (i/landX_Num)
+							, this.transform.position.z)
+						, Quaternion.identity
+						, this.transform).GetComponentInChildren<LandController>();
+					this.landList.Add(land);
 				}
 			} catch(System.NullReferenceException ex) {
 				throw ex;
 			} catch(System.Exception ex) {
 				throw ex;
 			}
-			
 		}
 
 		void Start () {
@@ -36,6 +39,14 @@ namespace Map {
 
 		void Update () {
 
+		}
+
+		public Vector3 GetLandPos(int _landIdx_X, int _landIdx_Y) {
+			return this.landList[_landIdx_X + _landIdx_Y * landX_Num].transform.position;
+		}
+
+		public Vector2 GetLandSize() {
+			return this.landList[0].transform.localScale;
 		}
 	}
 }

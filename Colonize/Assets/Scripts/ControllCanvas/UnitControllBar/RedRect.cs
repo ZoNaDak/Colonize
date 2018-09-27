@@ -12,21 +12,23 @@ namespace UnitControll {
 		public ButtonType ButtonType { get { return buttonType; } }
 
 		public void Awake() {
-			rectTransform = (this.transform as RectTransform);
+			this.rectTransform = (this.transform as RectTransform);
 		}
 
 		public void SetControll (UnitControllButton _button) {
 			this.transform.position = _button.transform.position;
-			buttonType = _button.ButtonType;
-			if(buttonType == ButtonType.MoveAndAttack) {
+			this.buttonType = _button.ButtonType;
+			if(this.buttonType == ButtonType.MoveAndAttack) {
 				if(Camera.main.ScreenToWorldPoint(Input.mousePosition).x - _button.transform.position.x <= 0) {
-					this.transform.Translate(new Vector2(ButtonSize.x * -0.25f , 0.0f));
+					this.transform.Translate(new Vector2(this.ButtonSize.x * -0.25f , 0.0f));
+					this.buttonType = ButtonType.Move;
 				} else {
-					this.transform.Translate(new Vector2(ButtonSize.x * 0.25f , 0.0f));
+					this.transform.Translate(new Vector2(this.ButtonSize.x * 0.25f , 0.0f));
+					this.buttonType = ButtonType.Attack;
 				}
-				rectTransform.sizeDelta = new Vector2(ButtonSize.x * 0.5f, ButtonSize.y);
+				this.rectTransform.sizeDelta = new Vector2(this.ButtonSize.x * 0.5f, this.ButtonSize.y);
 			} else {
-				rectTransform.sizeDelta = new Vector2(ButtonSize.x, ButtonSize.y);
+				this.rectTransform.sizeDelta = new Vector2(this.ButtonSize.x, this.ButtonSize.y);
 			}
 		}
 	}

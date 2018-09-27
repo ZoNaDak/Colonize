@@ -8,13 +8,16 @@ namespace UnitControll {
 	public enum ButtonType {
 		Camera,
 		MoveAndAttack,
+		Move,
+		Attack,
 		End
 	}
 
 	public class UnitControllButton : MonoBehaviour {
-		private UnitControllBar unitControllBar;
+		private static UnitControllBar unitControllBar;
+		private static RedRect redRect;
+		private static ControllBoard.ControllBoard controllBoard;
 		private ButtonType buttonType = ButtonType.End;
-		private RedRect redRect;
 
 		[SerializeField] private Image unitImage;
 		[SerializeField] private Text unitCount;
@@ -22,27 +25,31 @@ namespace UnitControll {
 		public ButtonType ButtonType { get { return buttonType; } }
 
 		void Awake() {
-			unitImage.gameObject.SetActive(false);
-			unitCount.gameObject.SetActive(false);
+			this.unitImage.gameObject.SetActive(false);
+			this.unitCount.gameObject.SetActive(false);
 		}
 		
 		public void Wake(ButtonType _type) {
-			this.unitControllBar = UnitControllBar.Instance;
-			this.redRect = unitControllBar.RedRect;
-			buttonType = _type;
+			if(unitControllBar == null) {
+				unitControllBar = UnitControllBar.Instance;
+				redRect = unitControllBar.RedRect;
+				controllBoard = ControllBoard.ControllBoard.Instance;
+			}
+			this.buttonType = _type;
 
 			switch(_type) {
 				case ButtonType.Camera:
-					unitImage.sprite = SpirteFactory.SpriteFactory.Instance.GetSprite("ControllUIAtlas", "Eye");
-					unitImage.transform.position = this.transform.position;
-					unitImage.gameObject.SetActive(true);
+					this.unitImage.sprite = SpirteFactory.SpriteFactory.Instance.GetSprite("ControllUIAtlas", "Eye");
+					this.unitImage.transform.position = this.transform.position;
+					this.unitImage.gameObject.SetActive(true);
 					redRect.SetControll(this);
+					controllBoard.SetControll(controllBoard.ClickOnCameraOption());
 				break;
 				case ButtonType.MoveAndAttack:
-					unitImage.sprite = SpirteFactory.SpriteFactory.Instance.GetSprite("ControllUIAtlas", "Move&Attack");
-					unitImage.transform.position = this.transform.position;
-					(unitImage.transform as RectTransform).sizeDelta = new Vector2(220.0f, 62.5f);
-					unitImage.gameObject.SetActive(true);
+					this.unitImage.sprite = SpirteFactory.SpriteFactory.Instance.GetSprite("ControllUIAtlas", "Move&Attack");
+					this.unitImage.transform.position = this.transform.position;
+					(this.unitImage.transform as RectTransform).sizeDelta = new Vector2(220.0f, 62.5f);
+					this.unitImage.gameObject.SetActive(true);
 				break;
 				default:
 					throw new System.ArgumentException(string.Format("{0} is not UnitControllButtonType!", _type.ToString()), "_type");
@@ -50,10 +57,33 @@ namespace UnitControll {
 		}
 
 		public void Click() {
-			if(buttonType == ButtonType.End) {
+			if(this.buttonType == ButtonType.End) {
 				return;
-			} 
-			redRect.SetControll(this);
+			}
+
+			try {
+				redRect.SetControll(this);
+				switch(this.buttonType) {
+					case ButtonType.Camera:
+						controllBoard.SetControll(controllBoard.ClickOnCameraOption());
+					break;
+					case ButtonType.MoveAndAttack:
+						if(redRect.ButtonType == ButtonType.Move) {
+							controllBoard.SetControll(controllBoard.ClickOnMoveOption());
+						} else if(redRect.ButtonType == ButtonType.Attack) {
+							controllBoard.SetControll(controllBoard.ClickOnAttackOption());
+						} else {
+							throw new System.ArgumentException("ButtonType Of RedRect is Not Correct!");
+						}
+					break;
+					default:
+						throw new System.ArgumentException("ButtonType is Not Correct!");
+				}
+			} catch(System.ArgumentException ex) {
+				throw ex;
+			} catch(System.Exception ex) {
+				throw ex;
+			}
 		}
 	}
 }
