@@ -14,7 +14,7 @@ namespace ControllBoard {
 		private ClickDelegate OnClick;
 
 		[SerializeField] private YellowRect yellowRect;
-		[SerializeField] private Camera mainCamera;
+		[SerializeField] private MyCamera.MainCameraController mainCamera;
 
 		void Start () {
 			this.rectTransform = (this.transform as RectTransform);
@@ -24,7 +24,7 @@ namespace ControllBoard {
 		}
 
 		void Update () {
-			this.yellowRect.SetPos(mainCamera.transform.position);
+			this.yellowRect.SetPos(mainCamera.GetPos());
 			if(drag) {
 				clickedTime += Time.deltaTime;
 			}
@@ -61,11 +61,7 @@ namespace ControllBoard {
 				Vector3 clickLandPos = Map.MapManager.Instance.GetLandPos(
 					(int)(boardClickPos.x / this.blockSize.x),
 					(int)(boardClickPos.y / this.blockSize.y));
-				this.mainCamera.transform.position = new Vector3(
-					clickLandPos.x,
-					clickLandPos.y,
-					this.mainCamera.transform.position.z
-				);
+				this.mainCamera.SetPos(new Vector2(clickLandPos.x, clickLandPos.y));
 			};
 		}
 

@@ -8,8 +8,7 @@ namespace DefaultManager {
 		private int playerNum;
 
 		[SerializeField] private Communicate.CommunicateManager communicator;
-		[SerializeField] private Camera mainCamera;
-		[SerializeField] private ControllBoard.ControllBoard controllBoard;
+		[SerializeField] private MyCamera.MainCameraController mainCamera;
 
 		void Awake() {
 			#if !UNITY_EDITOR
@@ -44,7 +43,7 @@ namespace DefaultManager {
 				default:
 					throw new System.ArgumentException("Player Number is Not Correct!");
 			}
-			this.mainCamera.transform.position = new Vector3(landPos.x, landPos.y, this.mainCamera.transform.position.z);
+			this.mainCamera.SetPos(new Vector2(landPos.x, landPos.y));
 		}
 	}
 }

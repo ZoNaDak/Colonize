@@ -7,9 +7,6 @@ using UnityEngine.U2D;
 namespace UnitControll {
 	public enum ButtonType {
 		Camera,
-		MoveAndAttack,
-		Move,
-		Attack,
 		End
 	}
 
@@ -45,12 +42,6 @@ namespace UnitControll {
 					redRect.SetControll(this);
 					controllBoard.SetControll(controllBoard.ClickOnCameraOption());
 				break;
-				case ButtonType.MoveAndAttack:
-					this.unitImage.sprite = SpirteFactory.SpriteFactory.Instance.GetSprite("ControllUIAtlas", "Move&Attack");
-					this.unitImage.transform.position = this.transform.position;
-					(this.unitImage.transform as RectTransform).sizeDelta = new Vector2(220.0f, 62.5f);
-					this.unitImage.gameObject.SetActive(true);
-				break;
 				default:
 					throw new System.ArgumentException(string.Format("{0} is not UnitControllButtonType!", _type.ToString()), "_type");
 			}
@@ -66,15 +57,6 @@ namespace UnitControll {
 				switch(this.buttonType) {
 					case ButtonType.Camera:
 						controllBoard.SetControll(controllBoard.ClickOnCameraOption());
-					break;
-					case ButtonType.MoveAndAttack:
-						if(redRect.ButtonType == ButtonType.Move) {
-							controllBoard.SetControll(controllBoard.ClickOnMoveOption());
-						} else if(redRect.ButtonType == ButtonType.Attack) {
-							controllBoard.SetControll(controllBoard.ClickOnAttackOption());
-						} else {
-							throw new System.ArgumentException("ButtonType Of RedRect is Not Correct!");
-						}
 					break;
 					default:
 						throw new System.ArgumentException("ButtonType is Not Correct!");

@@ -34,7 +34,6 @@ namespace UnitControll {
 
 		void Start() {
 			this.unitControllButtonList[0].Wake(UnitControll.ButtonType.Camera);
-			this.unitControllButtonList[1].Wake(UnitControll.ButtonType.MoveAndAttack);
 		}
 
 		void Update () {
