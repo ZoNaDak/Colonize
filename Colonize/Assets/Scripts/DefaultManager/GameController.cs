@@ -8,6 +8,7 @@ namespace DefaultManager {
 		private int playerNum;
 
 		[SerializeField] private Communicate.CommunicateManager communicator;
+		[SerializeField] private Building.BuildingManager buildingManager;
 		[SerializeField] private MyCamera.MainCameraController mainCamera;
 
 		void Awake() {
@@ -15,6 +16,7 @@ namespace DefaultManager {
 				Debug.unityLogger.logEnabled = false;
 			#endif
 			Screen.SetResolution(720, 1280, false);
+			
 			//임시
 			this.playerID = 0;
 			this.playerNum = 2;
@@ -22,15 +24,6 @@ namespace DefaultManager {
 
 		// Use this for initialization
 		void Start () {
-			SetCamera();
-		}
-
-		// Update is called once per frame
-		void Update () {
-
-		}
-
-		private void SetCamera() {
 			Vector2 landPos;
 			switch(this.playerNum) {
 				case 2:
@@ -43,7 +36,13 @@ namespace DefaultManager {
 				default:
 					throw new System.ArgumentException("Player Number is Not Correct!");
 			}
-			this.mainCamera.SetPos(new Vector2(landPos.x, landPos.y));
+			this.mainCamera.SetPos(landPos);
+			this.buildingManager.CreateBuilding(Building.BuildingType.Commander, landPos);
+		}
+
+		// Update is called once per frame
+		void Update () {
+
 		}
 	}
 }

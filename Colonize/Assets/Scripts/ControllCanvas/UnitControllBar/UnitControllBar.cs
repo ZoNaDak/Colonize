@@ -21,7 +21,7 @@ namespace UnitControll {
 					UnitControllButton button = Instantiate(unitControllButtonPrefab
 						, new Vector3(this.transform.position.x, startPosY - buttonSize * i , this.transform.position.z)
 						, Quaternion.identity
-						, this.buttons.transform).GetComponentInChildren<UnitControllButton>();
+						, this.buttons.transform).GetComponent<UnitControllButton>();
 					this.unitControllButtonList.Add(button);
 				}
 				this.redRect.ButtonSize = (this.unitControllButtonList[0].transform as RectTransform).sizeDelta;

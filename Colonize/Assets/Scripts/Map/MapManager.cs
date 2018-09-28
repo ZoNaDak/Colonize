@@ -23,7 +23,7 @@ namespace Map {
 							, this.transform.position.y + landSize * (i/landX_Num)
 							, this.transform.position.z)
 						, Quaternion.identity
-						, this.transform).GetComponentInChildren<LandController>();
+						, this.transform).GetComponent<LandController>();
 					this.landList.Add(land);
 				}
 			} catch(System.NullReferenceException ex) {

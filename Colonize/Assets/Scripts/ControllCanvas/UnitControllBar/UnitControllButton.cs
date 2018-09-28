@@ -26,7 +26,7 @@ namespace UnitControll {
 			this.unitCount.gameObject.SetActive(false);
 		}
 		
-		public void Wake(ButtonType _type) {
+		internal void Wake(ButtonType _type) {
 			if(unitControllBar == null) {
 				unitControllBar = UnitControllBar.Instance;
 				redRect = unitControllBar.RedRect;
@@ -47,7 +47,7 @@ namespace UnitControll {
 			}
 		}
 
-		public void Click() {
+		internal void Click() {
 			if(this.buttonType == ButtonType.End) {
 				return;
 			}

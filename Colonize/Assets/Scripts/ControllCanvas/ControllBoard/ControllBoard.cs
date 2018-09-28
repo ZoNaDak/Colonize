@@ -30,7 +30,7 @@ namespace ControllBoard {
 			}
 		}
 
-		public void Click() {
+		internal void Click() {
 			try {
 				OnClick();
 			} catch(System.NullReferenceException ex) {
@@ -40,12 +40,12 @@ namespace ControllBoard {
 			}
 		}
 
-		public void BeginDrag() {
+		internal void BeginDrag() {
 			clickedTime = 0.0f;
 			drag = true;
 		}
 
-		public void EndDrag() {
+		internal void EndDrag() {
 			drag = false;
 			Debug.Log(clickedTime);
 		}
