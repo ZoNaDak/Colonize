@@ -18,7 +18,8 @@ namespace DefaultManager {
 			#if !UNITY_EDITOR
 				Debug.unityLogger.logEnabled = false;
 			#endif
-			Screen.SetResolution(720, 1280, false);
+			//Screen.SetResolution(720, 1280, false);
+			Screen.SetResolution(360, 640, false);
 			
 			//임시
 			this.playerID = 1;

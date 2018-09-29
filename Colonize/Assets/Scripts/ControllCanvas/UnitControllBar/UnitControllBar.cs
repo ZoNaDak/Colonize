@@ -16,12 +16,10 @@ namespace UnitControll {
 			GameObject unitControllButtonPrefab = Prefab.PrefabFactory.Instance.CreatePrefab("Controll", "UnitControllButton", false);
 			try {
 				float buttonSize = unitControllButtonPrefab.GetComponent<RectTransform>().rect.height;
-				float startPosY =  this.transform.position.y + this.GetComponent<RectTransform>().rect.height * 0.5f - buttonSize * 0.5f;
+				float startPosY =  (this.GetComponent<RectTransform>().rect.height - buttonSize) * 0.5f;
 				for(int i = 0; i < buttonNum; ++i) {
-					UnitControllButton button = Instantiate(unitControllButtonPrefab
-						, new Vector3(this.transform.position.x, startPosY - buttonSize * i , this.transform.position.z)
-						, Quaternion.identity
-						, this.buttons.transform).GetComponent<UnitControllButton>();
+					UnitControllButton button = Instantiate(unitControllButtonPrefab, this.buttons.transform).GetComponent<UnitControllButton>();
+					button.transform.localPosition = new Vector3(0.0f, startPosY - buttonSize * i , 0.0f);
 					this.unitControllButtonList.Add(button);
 				}
 				this.redRect.ButtonSize = (this.unitControllButtonList[0].transform as RectTransform).sizeDelta;
