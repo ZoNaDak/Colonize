@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <BuildingInfo>
     <Building>
+        <Id>0</Id>
         <Name>Commander</Name>
-        <Sprite>{0}_Commander</Sprite>
         <Hp>100</Hp>
     </Building>
 </BuildingInfo>

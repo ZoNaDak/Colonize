@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Building {
-	public enum BuildingType {
-		Commander,
-		End
-	}
-
 	public class BuildingController : MonoBehaviour {
-		private BuildingType type;
+		private BuildingStatus status;
+		private int playerId;
 
-		[SerializeField] private SpriteRenderer sprite;
+		[SerializeField] private SpriteRenderer spriteRenderer;
+
+		public int PlayerId { get { return playerId; } }
+
+		public BuildingStatus Status { get { return status; } }
 		
 		void Start () {
 
@@ -21,7 +21,10 @@ namespace Building {
 
 		}
 
-		public void SetData() {
+		public void SetData(int _playerId, BuildingStatus _status, Sprite _sprite) {
+			this.playerId = _playerId;
+			this.status = _status;
+			this.spriteRenderer.sprite = _sprite;
 		}
 	}
 }

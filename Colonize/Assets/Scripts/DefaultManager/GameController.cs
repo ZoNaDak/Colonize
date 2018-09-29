@@ -11,6 +11,9 @@ namespace DefaultManager {
 		[SerializeField] private Building.BuildingManager buildingManager;
 		[SerializeField] private MyCamera.MainCameraController mainCamera;
 
+		public int PlayerId { get { return playerID; } }
+		public int PlayerNum { get { return playerNum; } }
+
 		void Awake() {
 			#if !UNITY_EDITOR
 				Debug.unityLogger.logEnabled = false;
@@ -18,7 +21,7 @@ namespace DefaultManager {
 			Screen.SetResolution(720, 1280, false);
 			
 			//임시
-			this.playerID = 0;
+			this.playerID = 1;
 			this.playerNum = 2;
 		}
 

@@ -11,7 +11,7 @@ namespace ControllBoard {
 		private float clickedTime;
 		private bool drag = false;
 
-		private ClickDelegate OnClick;
+		private System.Action OnClick;
 
 		[SerializeField] private YellowRect yellowRect;
 		[SerializeField] private MyCamera.MainCameraController mainCamera;
@@ -50,11 +50,11 @@ namespace ControllBoard {
 			Debug.Log(clickedTime);
 		}
 
-		public void SetControll(ClickDelegate _click) {
+		public void SetControll(System.Action _click) {
 			OnClick = _click;
 		}
 
-		public ClickDelegate ClickOnCameraOption() {
+		public System.Action ClickOnCameraOption() {
 			return () => {
 				Vector2 boardClickPos = Camera.main.ScreenToWorldPoint(Input.mousePosition) - this.transform.position;
 				boardClickPos += this.rectTransform.sizeDelta * 0.5f;
@@ -65,13 +65,13 @@ namespace ControllBoard {
 			};
 		}
 
-		public ClickDelegate ClickOnMoveOption() {
+		public System.Action ClickOnMoveOption() {
 			return () => {
 				Debug.Log("ClickOnMoveOption");
 			};
 		}
 
-		public ClickDelegate ClickOnAttackOption() {
+		public System.Action ClickOnAttackOption() {
 			return () => {
 				Debug.Log("ClickOnAttackOption");
 			};
