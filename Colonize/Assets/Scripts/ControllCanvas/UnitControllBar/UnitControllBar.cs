@@ -6,10 +6,12 @@ namespace UnitControll {
 	public class UnitControllBar : SingletonPattern.MonoSingleton<UnitControllBar> {
 		private List<UnitControllButton> unitControllButtonList = new List<UnitControllButton>(8);
 		private const int buttonNum = 8;
+		private bool awaked;
 
 		[SerializeField] private GameObject buttons;
 		[SerializeField] private RedRect redRect;
 
+		public bool Awaked { get { return awaked; } }
 		public RedRect RedRect { get { return redRect; } }
 
 		void Awake() {
@@ -27,15 +29,48 @@ namespace UnitControll {
 				throw ex;
 			} catch (System.Exception ex) {
 				throw ex;
+			} finally {
+				awaked = true;
 			}
 		}
 
 		void Start() {
-			this.unitControllButtonList[0].Wake(UnitControll.ButtonType.Camera);
+			WakeButtons();
 		}
 
 		void Update () {
 
+		}
+
+		private void WakeButtons() {
+			this.unitControllButtonList[0].Wake(UnitControll.ButtonType.Camera);
+			this.unitControllButtonList[1].Wake(UnitControll.ButtonType.SwordMan);
+		}
+
+		public UnitControllButton FindButton(ButtonType _type) {
+			for(int i = 0; i < unitControllButtonList.Count; ++i) {
+				if(unitControllButtonList[i].ButtonType == _type) {
+					return unitControllButtonList[i];
+				}
+			}
+
+			throw new System.ArgumentNullException(string.Format("Can't Find Button. Type : {0}" + _type));
+		}
+
+		public UnitControllButton FindButton(string _type) {
+			for(int i = 0; i < unitControllButtonList.Count; ++i) {
+				if(unitControllButtonList[i].ButtonType.ToString() == _type) {
+					return unitControllButtonList[i];
+				}
+			}
+			throw new System.ArgumentNullException(string.Format("Can't Find Button. Type : {0}" + _type));
+		}
+
+		public IEnumerator WaitForReady() {
+			while(!awaked) {
+				yield return false;
+			}
+			yield return true;
 		}
 	}
 }

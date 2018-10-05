@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<PieceInfo>
+    <Piece>
+        <Id>0</Id>
+        <Name>SwordMan</Name>
+        <Hp>50</Hp>
+        <Attack>10</Attack>
+        <Speed>3</Speed>
+    </Piece>
+</PieceInfo>

@@ -12,11 +12,13 @@ namespace Building {
 		public readonly BuildingType type;
 		public readonly string name;
 		public readonly int hp;
+		public readonly float produceCompleteTime;
 
-		public BuildingStatus(BuildingType _type, string _name, int _hp) {
+		public BuildingStatus(BuildingType _type, string _name, int _hp, float _produceTime) {
 			this.type = _type;
 			this.name = _name;
 			this.hp = _hp;
+			this.produceCompleteTime = _produceTime;
 		}
 	}
 }

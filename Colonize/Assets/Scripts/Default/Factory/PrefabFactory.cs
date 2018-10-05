@@ -9,8 +9,7 @@ namespace Prefab {
 
 		public GameObject CreatePrefab(string _category, string _prefabName, bool _save) {
 			if(this.prefabDictionary.ContainsKey(_prefabName)) {
-				Debug.Log("Notice : Already Saved Prefab : ", this.prefabDictionary[_prefabName]);
-				return this.prefabDictionary[_prefabName];
+				throw new System.ArgumentException("Already Saved Prefab");
 			}
 
 			GameObject prefab = Resources.Load(System.IO.Path.Combine("Prefabs", _category, _prefabName)) as GameObject;
@@ -23,6 +22,13 @@ namespace Prefab {
 			}
 
 			return prefab;
+		}
+
+		public GameObject FindPrefab(string _category, string _prefabName) {
+			if(!this.prefabDictionary.ContainsKey(_prefabName)) {
+				throw new System.ArgumentOutOfRangeException("Can't Find Prefab");
+			}
+			return this.prefabDictionary[_prefabName];
 		}
 	}
 }

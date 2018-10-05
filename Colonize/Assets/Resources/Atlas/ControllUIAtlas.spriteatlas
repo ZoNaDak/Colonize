@@ -46,12 +46,14 @@ SpriteAtlas:
     - {fileID: 2800000, guid: 5cfeaa2d205118046a8bc0396c2d6408, type: 3}
     - {fileID: 2800000, guid: bc24a8de8e784cc4c86736d996f73d11, type: 3}
     - {fileID: 2800000, guid: 0e207ab07d9269c43af0ae1ca4682122, type: 3}
+    - {fileID: 2800000, guid: e493a15d577f57f4996a610b63f9db90, type: 3}
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
   - {fileID: 21300000, guid: 0e207ab07d9269c43af0ae1ca4682122, type: 3}
   - {fileID: 21300000, guid: 194d47058f21ec54ab41f6d5375510a3, type: 3}
   - {fileID: 21300000, guid: 5cfeaa2d205118046a8bc0396c2d6408, type: 3}
+  - {fileID: 21300000, guid: e493a15d577f57f4996a610b63f9db90, type: 3}
   - {fileID: 21300000, guid: bed5484eb4d36674bbdbdc8fa96d2530, type: 3}
   - {fileID: 21300000, guid: e59f18ce67556f849a284bf1924bf8b3, type: 3}
   - {fileID: 21300000, guid: bc24a8de8e784cc4c86736d996f73d11, type: 3}
@@ -59,6 +61,7 @@ SpriteAtlas:
   - YellowRect
   - Eye
   - RedRect
+  - Sword
   - UnitControllButton
   - ControllBoard
   - Move&Attack

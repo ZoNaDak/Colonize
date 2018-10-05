@@ -41,7 +41,7 @@ namespace DefaultManager {
 					throw new System.ArgumentException("Player Number is Not Correct!");
 			}
 			this.mainCamera.SetPos(landPos);
-			this.buildingManager.CreateBuilding(Building.BuildingType.Commander, landPos);
+			this.buildingManager.CreateUnit(Building.BuildingType.Commander, landPos);
 		}
 
 		// Update is called once per frame

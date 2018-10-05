@@ -6,9 +6,10 @@ using UnityEngine;
 namespace MyXml {
 	public static class XmlManager {
 		private static string strLoadErr = "Error : Can't Load Xml. name : {0}";
-		private static XmlDocument xmlDoc = new XmlDocument();
+		private static Dictionary<string, XmlDocument> xmlDocList = new Dictionary<string, XmlDocument>();
 
 		public static XmlNodeList LoadXmlNodes(string _xmlName, string _nodeName) {
+			XmlDocument xmlDoc = new XmlDocument();
 			XmlNodeList loadNodes;
 			TextAsset textAsset = Resources.Load(System.IO.Path.Combine("Xml", _xmlName)) as TextAsset;
 			try {
@@ -19,13 +20,16 @@ namespace MyXml {
 				return null;
 			} catch (System.Exception ex) {
 				throw ex;
+			} finally {
+				xmlDocList.Add(_xmlName, xmlDoc);
 			}
 			
 			return loadNodes;
 		}
 
-		public static void ClearXmlDoc() {
-			xmlDoc.RemoveAll();
+		public static void ClearXmlDoc(string _xmlName) {
+			xmlDocList[_xmlName].RemoveAll();
+			xmlDocList.Remove(_xmlName);
 		}
 	}
 }

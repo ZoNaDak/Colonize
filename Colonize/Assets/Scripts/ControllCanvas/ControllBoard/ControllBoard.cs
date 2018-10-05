@@ -54,6 +54,10 @@ namespace ControllBoard {
 			OnClick = _click;
 		}
 
+		public System.Action ClickNoOption() {
+			return () => {};
+		}
+
 		public System.Action ClickOnCameraOption() {
 			return () => {
 				Vector2 boardClickPos = Camera.main.ScreenToWorldPoint(Input.mousePosition) - this.transform.position;

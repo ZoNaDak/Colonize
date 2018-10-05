@@ -4,15 +4,15 @@ using UnityEngine;
 
 namespace UnitControll {
 	public class RedRect : MonoBehaviour {
-		private ButtonType buttonType;
+		private UnitControllButton activeButton;
 		
 		public Vector2 ButtonSize { get; set; }
 
-		public ButtonType ButtonType { get { return buttonType; } }
+		public UnitControllButton ActiveButton { get { return activeButton; } }
 
 		public void SetControll (UnitControllButton _button) {
 			this.transform.position = _button.transform.position;
-			this.buttonType = _button.ButtonType;
+			this.activeButton = _button;
 		}
 	}
 }
