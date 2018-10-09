@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Xml;
 using UnityEngine;
-using Unit;
 
-namespace Building {
+namespace Colonize.Unit.Building {
 	public sealed class BuildingManager : UnitManager<BuildingManager, BuildingController, BuildingStatus, BuildingType> {
 		
 		void Awake () {
@@ -27,7 +26,7 @@ namespace Building {
 					System.Convert.ToInt32(node.SelectSingleNode("Hp").InnerText),
 					float.Parse(node.SelectSingleNode("Produce").InnerText));
 				this.unitInfoDictionary.Add(status.type, status);
-				Prefab.PrefabFactory.Instance.CreatePrefab("Buildings", status.type.ToString(), true);
+				Pattern.Factory.PrefabFactory.Instance.CreatePrefab("Buildings", status.type.ToString(), true);
 			}
 
 			MyXml.XmlManager.ClearXmlDoc(_xmlName);
@@ -51,14 +50,14 @@ namespace Building {
 			}
 
 			try {
-				GameObject buildingPrefab = Prefab.PrefabFactory.Instance.FindPrefab("Buildings", _type.ToString());
+				GameObject buildingPrefab = Pattern.Factory.PrefabFactory.Instance.FindPrefab("Buildings", _type.ToString());
 				BuildingController building = Instantiate(buildingPrefab
 					, new Vector3(_pos.x, _pos.y, buildingPrefab.transform.position.z)
 					, Quaternion.identity
 					, this.transform).GetComponent<BuildingController>();
 				BuildingStatus status = this.unitInfoDictionary[_type];
 				building.SetData(this.playerId, status
-					, SpirteFactory.SpriteFactory.Instance.GetSprite("PiecesAtlas", string.Format(pieceSpriteName, status.name)));
+					, Pattern.Factory.SpriteFactory.Instance.GetSprite("PiecesAtlas", string.Format(pieceSpriteName, status.name)));
 				this.unitList.Add(building);
 			} catch(System.NullReferenceException ex) {
 				throw ex;

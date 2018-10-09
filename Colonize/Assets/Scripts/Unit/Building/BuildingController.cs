@@ -1,9 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Unit;
 
-namespace Building {
+namespace Colonize.Unit.Building {
 	public sealed class BuildingController : UnitController<BuildingController, BuildingStatus> {
 		
 		private static List<Vector2> producePosList = new List<Vector2>(16);

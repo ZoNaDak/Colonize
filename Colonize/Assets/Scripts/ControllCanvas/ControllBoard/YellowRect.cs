@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ControllBoard {
+namespace Colonize.ControllUI.ControllBoard {
 	public class YellowRect : MonoBehaviour {
 		private Vector2 landSize;
 		private RectTransform rectTransform;

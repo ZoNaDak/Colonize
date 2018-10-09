@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.U2D;
+using Colonize;
 
-namespace UnitControll {
+namespace Colonize.ControllUI.UnitControll {
 	public enum ButtonType {
 		Camera,
 		SwordMan,
 		End
 	}
 
-	public class UnitControllButton : MonoBehaviour, Observer.IObserverOfUnit<Unit.UnitController<Piece.PieceController, Piece.PieceStatus>> {
+	public class UnitControllButton : MonoBehaviour, Pattern.Observer.IObserverOfUnit<Unit.UnitController<Unit.Piece.PieceController, Unit.Piece.PieceStatus>> {
 		private static UnitControllBar unitControllBar;
 		private static RedRect redRect;
 		private static ControllBoard.ControllBoard controllBoard;
@@ -53,7 +54,7 @@ namespace UnitControll {
 					redRect.SetControll(this);
 				break;
 				case ButtonType.SwordMan:
-					buttonRoll = new PieceButtonRoll();
+					buttonRoll = new PieceButtonRoll(Unit.Piece.PieceType.SwordMan);
 				break;
 				default:
 					throw new System.ArgumentException(string.Format("{0} is not UnitControllButtonType!", _type.ToString()), "_type");
@@ -84,7 +85,7 @@ namespace UnitControll {
 		}
 
 		//Interface Fuction
-		public void OnNotify(Unit.UnitController<Piece.PieceController, Piece.PieceStatus> _piece) {
+		public void OnNotify(Unit.UnitController<Unit.Piece.PieceController, Unit.Piece.PieceStatus> _piece) {
 			unitCountText.text = _piece.UnitNum.ToString();
 		}
 	}

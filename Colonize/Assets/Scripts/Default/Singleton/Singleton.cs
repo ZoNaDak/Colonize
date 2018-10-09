@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SingletonPattern {
+namespace Pattern.Singleton {
 	public abstract class Singleton<T> where T : class {
 		protected static T instance = null;
 		public static T Instance {

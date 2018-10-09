@@ -2,14 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ControllBoard {
-	public class ControllBoard : SingletonPattern.MonoSingleton<ControllBoard> {
+namespace Colonize.ControllUI.ControllBoard {
+	public class ControllBoard : Pattern.Singleton.MonoSingleton<ControllBoard> {
 		public delegate void ClickDelegate();
 
 		private RectTransform rectTransform;
 		private Vector2 blockSize = new Vector2();
 		private float clickedTime;
 		private bool drag = false;
+		private Unit.Piece.PieceType selectedPieceType;
+		private Unit.Piece.PieceManager pieceManager;
 
 		private System.Action OnClick;
 
@@ -21,6 +23,7 @@ namespace ControllBoard {
 			blockSize.x = rectTransform.sizeDelta.x / Map.MapManager.Instance.LandX_Num;
 			blockSize.y = rectTransform.sizeDelta.y / Map.MapManager.Instance.LandX_Num;
 			this.yellowRect.LandSize = Map.MapManager.Instance.GetLandSize();
+			pieceManager = Unit.Piece.PieceManager.Instance as Unit.Piece.PieceManager;
 		}
 
 		void Update () {
@@ -50,8 +53,9 @@ namespace ControllBoard {
 			Debug.Log(clickedTime);
 		}
 
-		public void SetControll(System.Action _click) {
-			OnClick = _click;
+		public void SetControll(System.Action _click, Unit.Piece.PieceType _pieceType) {
+			this.OnClick = _click;
+			this.selectedPieceType = _pieceType;
 		}
 
 		public System.Action ClickNoOption() {
@@ -71,7 +75,7 @@ namespace ControllBoard {
 
 		public System.Action ClickOnMoveOption() {
 			return () => {
-				Debug.Log("ClickOnMoveOption");
+				this.pieceManager.MovePieces(selectedPieceType);
 			};
 		}
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace UnitControll {
+namespace Colonize.ControllUI.UnitControll {
 	public class RedRect : MonoBehaviour {
 		private UnitControllButton activeButton;
 		

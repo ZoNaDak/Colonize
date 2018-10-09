@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Prefab {
-	public class PrefabFactory : SingletonPattern.Singleton<PrefabFactory> {
+namespace Pattern.Factory {
+	public class PrefabFactory : Singleton.Singleton<PrefabFactory> {
 		private Dictionary<string, GameObject> prefabDictionary = new Dictionary<string, GameObject>();
 		private string strLoadErr = "Error : Can't Load Prefab. Category : {0}, Prefab : {1}";
 

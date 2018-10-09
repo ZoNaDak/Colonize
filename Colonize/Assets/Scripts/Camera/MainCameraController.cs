@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace MyCamera {
+namespace Colonize.MyCamera {
 	public class MainCameraController : MonoBehaviour {
 		private float controllUIHalfSizeY;
 
-		[SerializeField] private ControllBoard.ControllBoard controllBoard;
+		[SerializeField] private ControllUI.ControllBoard.ControllBoard controllBoard;
 
 		void Start () {
 			controllUIHalfSizeY = (controllBoard.transform as RectTransform).sizeDelta.y * 0.5f;

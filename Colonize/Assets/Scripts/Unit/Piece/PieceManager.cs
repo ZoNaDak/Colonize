@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Xml;
 using UnityEngine;
-using Unit;
 
-namespace Piece {
+namespace Colonize.Unit.Piece {
 	public sealed class PieceManager : UnitManager<PieceManager, PieceController, PieceStatus, PieceType> {
 		
 		void Awake() {
@@ -20,7 +19,7 @@ namespace Piece {
 		}
 
 		protected override IEnumerator SaveUnitInfoWithCoroutine (XmlNodeList _xmlNodes, string _xmlName) {
-			yield return UnitControll.UnitControllBar.Instance.WaitForReady();
+			yield return ControllUI.UnitControll.UnitControllBar.Instance.WaitForReady();
 
 			foreach(XmlNode node in _xmlNodes) {
 				PieceStatus status =  new PieceStatus(
@@ -30,8 +29,8 @@ namespace Piece {
 					System.Convert.ToInt32(node.SelectSingleNode("Attack").InnerText),
 					System.Convert.ToInt32(node.SelectSingleNode("Speed").InnerText));
 				this.unitInfoDictionary.Add(status.type, status);
-				GameObject piecePrefab = Prefab.PrefabFactory.Instance.CreatePrefab("Pieces", status.type.ToString(), true);
-				piecePrefab.GetComponent<PieceController>().AddObserver(UnitControll.UnitControllBar.Instance.FindButton(status.type.ToString()));
+				GameObject piecePrefab = Pattern.Factory.PrefabFactory.Instance.CreatePrefab("Pieces", status.type.ToString(), true);
+				piecePrefab.GetComponent<PieceController>().AddObserver(ControllUI.UnitControll.UnitControllBar.Instance.FindButton(status.type.ToString()));
 			}
 
 			MyXml.XmlManager.ClearXmlDoc(_xmlName);
@@ -55,19 +54,26 @@ namespace Piece {
 			}
 
 			try {
-				GameObject piecePrefab = Prefab.PrefabFactory.Instance.FindPrefab("Pieces", _type.ToString());
+				GameObject piecePrefab = Pattern.Factory.PrefabFactory.Instance.FindPrefab("Pieces", _type.ToString());
 				PieceController piece = Instantiate(piecePrefab
 					, new Vector3(_pos.x, _pos.y, piecePrefab.transform.position.z)
 					, Quaternion.identity
 					, this.transform).GetComponent<PieceController>();
 				PieceStatus status = this.unitInfoDictionary[_type];
 				piece.SetData(this.playerId, status
-					, SpirteFactory.SpriteFactory.Instance.GetSprite("PiecesAtlas", string.Format(pieceSpriteName, status.name)));
+					, Pattern.Factory.SpriteFactory.Instance.GetSprite("PiecesAtlas", string.Format(pieceSpriteName, status.name)));
 				this.unitList.Add(piece);
 			} catch(System.NullReferenceException ex) {
 				throw ex;
 			} catch(System.Exception ex) {
 				throw ex;
+			}
+		}
+
+		public void MovePieces(PieceType _type) {
+			var pieces = GetUnits(_type);
+			for(int i = 0; i < pieces.Count; ++i) {
+				Debug.Log("Move");
 			}
 		}
 	}

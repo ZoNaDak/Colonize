@@ -400,6 +400,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   communicator: {fileID: 478769972}
   buildingManager: {fileID: 1094219085}
+  pieceManager: {fileID: 926749367}
   mainCamera: {fileID: 519420030}
 --- !u!1 &926749365
 GameObject:

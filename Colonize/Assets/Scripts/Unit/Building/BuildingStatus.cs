@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Building {
+namespace Colonize.Unit.Building {
 	public enum BuildingType {
 		Commander,
 		End

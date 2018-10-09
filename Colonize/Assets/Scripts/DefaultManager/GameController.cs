@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace DefaultManager {
-	public class GameController : SingletonPattern.MonoSingleton<GameController> {
+namespace Colonize.DefaultManager {
+	public class GameController : Pattern.Singleton.MonoSingleton<GameController> {
 		private int playerID;
 		private int playerNum;
 
 		[SerializeField] private Communicate.CommunicateManager communicator;
-		[SerializeField] private Building.BuildingManager buildingManager;
+		[SerializeField] private Unit.Building.BuildingManager buildingManager;
+		[SerializeField] private Unit.Piece.PieceManager pieceManager;
 		[SerializeField] private MyCamera.MainCameraController mainCamera;
 
 		public int PlayerId { get { return playerID; } }
@@ -41,7 +42,7 @@ namespace DefaultManager {
 					throw new System.ArgumentException("Player Number is Not Correct!");
 			}
 			this.mainCamera.SetPos(landPos);
-			this.buildingManager.CreateUnit(Building.BuildingType.Commander, landPos);
+			this.buildingManager.CreateUnit(Unit.Building.BuildingType.Commander, landPos);
 		}
 
 		// Update is called once per frame

@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Unit {
-	public abstract class UnitController<T, TStatus> : Observer.SubjectOfUnit<UnitController<T, TStatus>>
+namespace Colonize.Unit {
+	public abstract class UnitController<T, TStatus> : Pattern.Observer.SubjectOfUnit<UnitController<T, TStatus>>
 		where T : class where TStatus : struct {
 		
 		protected static int unitNum;

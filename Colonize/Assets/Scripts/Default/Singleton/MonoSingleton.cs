@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SingletonPattern {
+namespace Pattern.Singleton {
 	public class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour {
 		protected static T instance = null;
 		public static T Instance {

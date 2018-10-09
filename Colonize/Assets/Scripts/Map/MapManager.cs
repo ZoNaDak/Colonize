@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Map {
-	public class MapManager : SingletonPattern.MonoSingleton<MapManager> {
+	public class MapManager : Pattern.Singleton.MonoSingleton<MapManager> {
 		private List<LandController> landList = new List<LandController>(landNum);
 		private const int landNum = 25;
 		private const int landX_Num = 5;
@@ -13,7 +13,7 @@ namespace Map {
 
 		void Awake() {
 			try {
-				GameObject landPrefab = Prefab.PrefabFactory.Instance.CreatePrefab("Lands", "BasicLand", false);
+				GameObject landPrefab = Pattern.Factory.PrefabFactory.Instance.CreatePrefab("Lands", "BasicLand", false);
 				float landSize = landPrefab.transform.localScale.x;
 				this.transform.Translate(landSize * 0.5f, landSize * 0.5f, 0.0f);
 				for(int i = 0; i < landNum; ++i) {

@@ -2,10 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
+using System.Linq;
 using UnityEngine;
 
-namespace Unit {
-	public abstract class UnitManager<T, TController, TStatus, TType> : SingletonPattern.MonoSingleton<UnitManager<T, TController, TStatus, TType>>
+namespace Colonize.Unit {
+	public abstract class UnitManager<T, TController, TStatus, TType> : Pattern.Singleton.MonoSingleton<UnitManager<T, TController, TStatus, TType>>
 		where T : class
 		where TController : UnitController<TController, TStatus>
 		where TStatus : struct
@@ -31,6 +32,11 @@ namespace Unit {
 			} catch (System.Exception ex) {
 				throw ex;
 			}
+		}
+
+		public List<TController> GetUnits(TType _type) {
+			return (from controller in this.unitList
+					select controller).ToList();
 		}
 	}
 }

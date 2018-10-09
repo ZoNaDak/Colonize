@@ -3,20 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UnitControll {
-	public class PieceButtonRoll : ButtonRoll {
+namespace Colonize.ControllUI.UnitControll {
+	public sealed class PieceButtonRoll : ButtonRoll {
 		private static float buttonWidth;
 		private static float outerImageOriginLocalPosX;
 
 		private bool active;
+		private Unit.Piece.PieceType pieceType;
 		private Coroutine coroutine;
+
+		internal PieceButtonRoll(Unit.Piece.PieceType _pieceType) {
+			this.pieceType = _pieceType;
+		}
 
 		internal override void SetButtonForWake(UnitControllButton _button) {
 			if(buttonWidth == 0.0f) {
 				buttonWidth = (_button.transform as RectTransform).sizeDelta.x;
 				outerImageOriginLocalPosX = _button.OuterImage.transform.localPosition.x;
 			}
-			_button.UnitImage.sprite = SpirteFactory.SpriteFactory.Instance.GetSprite("ControllUIAtlas", "Sword");
+			_button.UnitImage.sprite = Pattern.Factory.SpriteFactory.Instance.GetSprite("ControllUIAtlas", "Sword");
 			_button.UnitImage.gameObject.SetActive(true);
 			_button.UnitCountText.gameObject.SetActive(true);
 		}
@@ -27,15 +32,15 @@ namespace UnitControll {
 				float boardClickPosX = Camera.main.ScreenToWorldPoint(Input.mousePosition).x - _button.transform.position.x;
 				if(boardClickPosX < 0.0f) {
 					_button.ImageMask.transform.localPosition = new Vector2(-buttonWidth * 0.25f, 0.0f);
-					_button.MyControllBoard.SetControll(_button.MyControllBoard.ClickOnMoveOption());
+					_button.MyControllBoard.SetControll(_button.MyControllBoard.ClickOnMoveOption(), pieceType);
 				} else {
 					_button.ImageMask.transform.localPosition = new Vector2(buttonWidth * 0.25f, 0.0f);
-					_button.MyControllBoard.SetControll(_button.MyControllBoard.ClickOnAttackOption());
+					_button.MyControllBoard.SetControll(_button.MyControllBoard.ClickOnAttackOption(), pieceType);
 				}
 			} else {
 				this.active = true;
 				_button.ImageMask.gameObject.SetActive(false);
-				_button.MyControllBoard.SetControll(_button.MyControllBoard.ClickNoOption());
+				_button.MyControllBoard.SetControll(_button.MyControllBoard.ClickNoOption(), Unit.Piece.PieceType.End);
 				if(this.coroutine != null) {
 					_button.StopCoroutine(this.coroutine);
 				}

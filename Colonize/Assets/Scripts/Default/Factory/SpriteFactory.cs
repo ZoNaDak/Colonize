@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.U2D;
 
-namespace SpirteFactory {
-	public class SpriteFactory : SingletonPattern.Singleton<SpriteFactory> {
+namespace Pattern.Factory {
+	public class SpriteFactory : Singleton.Singleton<SpriteFactory> {
 		public Dictionary<string, SpriteAtlas> atlasDictionary = new Dictionary<string, SpriteAtlas>();
 		private string strLoadErr = "Error : Can't Load atlas. AtlasName : {0}";
 

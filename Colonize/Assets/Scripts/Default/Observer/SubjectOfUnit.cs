@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Observer {
+namespace Pattern.Observer {
 	public abstract class SubjectOfUnit<T> : MonoBehaviour 
 		where T : SubjectOfUnit<T> {
 		protected static List<IObserverOfUnit<T>> observerList = new List<IObserverOfUnit<T>>();
