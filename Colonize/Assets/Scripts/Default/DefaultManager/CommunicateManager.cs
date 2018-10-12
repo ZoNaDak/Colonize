@@ -4,7 +4,7 @@ using UnityEngine;
 using Photon;
 
 namespace Communicate {
-	public class CommunicateManager : Photon.PunBehaviour {
+	public class CommunicateManager : Photon.MonoBehaviour {
 		// Use this for initialization
 		void Start () {
 			PhotonNetwork.ConnectUsingSettings("0.1");
@@ -18,10 +18,10 @@ namespace Communicate {
 		void OnGUI() {
 			GUILayout.Label(PhotonNetwork.connectionStateDetailed.ToString());
 		}
-
+		/*
 		public override void OnJoinedLobby() {
 			PhotonNetwork.JoinRandomRoom();
-		}
+		}*/
 
 		void OnPhotonRandomJoinFailed() {
 			Debug.Log("Can't Join Lobby");
