@@ -20,8 +20,8 @@ namespace Colonize.ControllUI.ControllBoard {
 
 		void Start () {
 			this.rectTransform = (this.transform as RectTransform);
-			blockSize.x = rectTransform.sizeDelta.x / Map.MapManager.Instance.LandX_Num;
-			blockSize.y = rectTransform.sizeDelta.y / Map.MapManager.Instance.LandX_Num;
+			blockSize.x = rectTransform.sizeDelta.x / Map.MapManager.Instance.LandNumX;
+			blockSize.y = rectTransform.sizeDelta.y / Map.MapManager.Instance.LandNumY;
 			this.yellowRect.LandSize = Map.MapManager.Instance.GetLandSize();
 			pieceManager = Unit.Piece.PieceManager.Instance as Unit.Piece.PieceManager;
 		}
@@ -31,6 +31,26 @@ namespace Colonize.ControllUI.ControllBoard {
 			if(drag) {
 				clickedTime += Time.deltaTime;
 			}
+		}
+
+		private Vector2 GetLandPosForClickBoard() {
+			Vector2 boardClickPos = Camera.main.ScreenToWorldPoint(Input.mousePosition) - this.transform.position;
+			boardClickPos += this.rectTransform.sizeDelta * 0.5f;
+			Vector2 clickLandPos = Map.MapManager.Instance.GetLandPos(
+				(int)(boardClickPos.x / this.blockSize.x),
+				(int)(boardClickPos.y / this.blockSize.y));
+
+			return clickLandPos;
+		}
+
+		private Vector2Int GetLandIdxForClickBoard() {
+			Vector2 boardClickPos = Camera.main.ScreenToWorldPoint(Input.mousePosition) - this.transform.position;
+			boardClickPos += this.rectTransform.sizeDelta * 0.5f;
+			Vector2Int clickLandIdx = new Vector2Int(
+				(int)(boardClickPos.x / this.blockSize.x),
+				(int)(boardClickPos.y / this.blockSize.y));
+
+			return clickLandIdx;
 		}
 
 		internal void Click() {
@@ -64,18 +84,13 @@ namespace Colonize.ControllUI.ControllBoard {
 
 		public System.Action ClickOnCameraOption() {
 			return () => {
-				Vector2 boardClickPos = Camera.main.ScreenToWorldPoint(Input.mousePosition) - this.transform.position;
-				boardClickPos += this.rectTransform.sizeDelta * 0.5f;
-				Vector3 clickLandPos = Map.MapManager.Instance.GetLandPos(
-					(int)(boardClickPos.x / this.blockSize.x),
-					(int)(boardClickPos.y / this.blockSize.y));
-				this.mainCamera.SetPos(new Vector2(clickLandPos.x, clickLandPos.y));
+				this.mainCamera.SetPos(GetLandPosForClickBoard());
 			};
 		}
 
 		public System.Action ClickOnMoveOption() {
 			return () => {
-				this.pieceManager.MovePieces(selectedPieceType);
+				this.pieceManager.MovePieces(selectedPieceType, GetLandIdxForClickBoard());
 			};
 		}
 

@@ -19,9 +19,11 @@ namespace Colonize.DefaultManager {
 			#if !UNITY_EDITOR
 				Debug.unityLogger.logEnabled = false;
 			#endif
+
+			//SetResoultion
 			//Screen.SetResolution(720, 1280, false);
 			Screen.SetResolution(360, 640, false);
-			
+
 			//임시
 			this.playerID = 1;
 			this.playerNum = 2;
@@ -29,6 +31,9 @@ namespace Colonize.DefaultManager {
 
 		// Use this for initialization
 		void Start () {
+			//SetAstar
+			Utility.Algorithm.AStar.AStarManager.Awake(Map.MapManager.Instance.LandNumX, Map.MapManager.Instance.LandNumY);
+			//
 			Vector2 landPos;
 			switch(this.playerNum) {
 				case 2:

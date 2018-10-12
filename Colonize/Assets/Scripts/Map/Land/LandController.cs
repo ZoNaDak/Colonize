@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Map {
+namespace Colonize.Map.Land {
 	public class LandController : MonoBehaviour {
 		
 		// Use this for initialization

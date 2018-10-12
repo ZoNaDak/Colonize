@@ -1,21 +1,27 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Colonize.Unit.Piece {
-	enum StateType {
+	public enum PieceStateType {
 		Stand,
 		Move,
 		Attack,
 		End
 	}
 
-	public abstract class PieceState {
-		private StateType type;
+	public abstract class PieceState : UnitState<PieceStateType, PieceController> {
 
-		internal PieceState(StateType _type) {
-			this.type = _type;
+		protected readonly PieceStateController stateController;
+
+		internal PieceState(PieceStateType _type, PieceStateController _stateController)
+		 : base(_type) {
+			this.stateController = _stateController;
 		}
+
+		internal override abstract void StartState();
+		internal override abstract void StopState();
 	}
 }
 

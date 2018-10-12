@@ -1,6 +1,7 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
+using System.Linq;
 using UnityEngine;
 
 namespace Colonize.Unit.Piece {
@@ -16,6 +17,21 @@ namespace Colonize.Unit.Piece {
 
 		void Update () {
 
+		}
+
+		private IEnumerable<IGrouping<Vector2Int, PieceController>> GetUnitsGroupByLand(PieceType _type) {
+			var selectedUnits =  from controller in this.unitList group controller by Map.MapManager.Instance.GetLandIdx(controller.transform.position);
+			return selectedUnits;
+		}
+
+		public void MovePieces(PieceType _type, Vector2Int _destLandPos) {
+			var selectedPieces = GetUnitsGroupByLand(_type);
+			foreach(var piecesInSameLand in selectedPieces) {
+				List<Vector2> path = Map.MapManager.Instance.FindPath(piecesInSameLand.Key, _destLandPos);
+				foreach(var piece in piecesInSameLand) {
+					piece.SetMoveState(path);
+				}
+			}
 		}
 
 		protected override IEnumerator SaveUnitInfoWithCoroutine (XmlNodeList _xmlNodes, string _xmlName) {
@@ -70,12 +86,10 @@ namespace Colonize.Unit.Piece {
 			}
 		}
 
-		public void MovePieces(PieceType _type) {
-			var pieces = GetUnits(_type);
-			for(int i = 0; i < pieces.Count; ++i) {
-				Debug.Log("Move");
-			}
+		public override IEnumerable<PieceController> GetUnits(PieceType _type) {
+			return from controller in this.unitList
+					where controller.Status.type == _type
+					select controller;
 		}
 	}
 }
-

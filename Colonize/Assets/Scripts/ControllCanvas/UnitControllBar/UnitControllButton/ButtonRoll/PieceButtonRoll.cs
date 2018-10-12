@@ -59,7 +59,7 @@ namespace Colonize.ControllUI.UnitControll {
 		//Coroutine
 		private IEnumerator MoveImageLeft(UnitControllButton _button) {
 			while(outerImageOriginLocalPosX - buttonWidth < _button.OuterImage.transform.localPosition.x) {
-				yield return new WaitForSeconds(0.01f);
+				yield return new WaitForSecondsRealtime(0.01f);
 				_button.OuterImage.transform.Translate(-5.0f, 0.0f, 0.0f);
 			}
 			_button.OuterImage.transform.localPosition = new Vector3(outerImageOriginLocalPosX - buttonWidth, 0.0f, 0.0f);
@@ -68,7 +68,7 @@ namespace Colonize.ControllUI.UnitControll {
 
 		private IEnumerator MoveImageRight(UnitControllButton _button) {
 			while(outerImageOriginLocalPosX >= _button.OuterImage.transform.localPosition.x) {
-				yield return new WaitForSeconds(0.01f);
+				yield return new WaitForSecondsRealtime(0.01f);
 				_button.OuterImage.transform.Translate(5.0f, 0.0f, 0.0f);
 			}
 			_button.OuterImage.transform.localPosition = new Vector3(outerImageOriginLocalPosX, 0.0f, 0.0f);

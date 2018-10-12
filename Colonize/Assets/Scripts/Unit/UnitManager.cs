@@ -34,10 +34,11 @@ namespace Colonize.Unit {
 			}
 		}
 
-		public List<TController> GetUnits(TType _type) {
-			return (from controller in this.unitList
-					select controller).ToList();
+		public IEnumerable<TController> GetAllUnits() {
+			return from controller in this.unitList
+					select controller;
 		}
+
+		public abstract IEnumerable<TController> GetUnits(TType _type);
 	}
 }
-

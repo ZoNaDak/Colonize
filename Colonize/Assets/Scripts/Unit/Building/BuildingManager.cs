@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
+using System.Linq;
 using UnityEngine;
 
 namespace Colonize.Unit.Building {
@@ -64,6 +65,12 @@ namespace Colonize.Unit.Building {
 			} catch(System.Exception ex) {
 				throw ex;
 			}
+		}
+
+		public override IEnumerable<BuildingController> GetUnits(BuildingType _type) {
+			return from controller in this.unitList
+					where controller.Status.type == _type
+					select controller;
 		}
 	}
 }
