@@ -6,8 +6,8 @@ namespace Colonize.DefaultManager {
 	public class GameController : Pattern.Singleton.MonoSingleton<GameController> {
 		private int playerID;
 		private int playerNum;
+		private Communicate.CommunicateManager communicator;
 
-		[SerializeField] private Communicate.CommunicateManager communicator;
 		[SerializeField] private Unit.Building.BuildingManager buildingManager;
 		[SerializeField] private Unit.Piece.PieceManager pieceManager;
 		[SerializeField] private MyCamera.MainCameraController mainCamera;
@@ -24,14 +24,15 @@ namespace Colonize.DefaultManager {
 			//Screen.SetResolution(720, 1280, false);
 			Screen.SetResolution(360, 640, false);
 
-			//임시
-			this.playerID = 1;
+			communicator = Communicate.CommunicateManager.Instance;
+
+			this.playerID = communicator.PlayerId;
 			this.playerNum = 2;
 		}
 
 		// Use this for initialization
 		void Start () {
-			//SetAstar
+			//SetAStar
 			Utility.Algorithm.AStar.AStarManager.Awake(Map.MapManager.Instance.LandNumX, Map.MapManager.Instance.LandNumY);
 			//
 			Vector2 landPos;

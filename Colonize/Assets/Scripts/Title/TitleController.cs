@@ -25,7 +25,7 @@ namespace Colonize.Title {
 		}
 
 		public void OnStartButtonClicked() {
-			SceneManager.LoadScene("Main");
+			SceneManager.LoadScene("Join");
 			//DontDestroyOnLoad(StaticData.Instance);
 		}
 

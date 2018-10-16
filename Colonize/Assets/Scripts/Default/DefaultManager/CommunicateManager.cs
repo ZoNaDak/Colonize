@@ -4,28 +4,67 @@ using UnityEngine;
 using Photon;
 
 namespace Communicate {
-	public class CommunicateManager : Photon.MonoBehaviour {
-		// Use this for initialization
-		void Start () {
+	public class CommunicateManager : Pattern.Singleton.PhotonMonoSingleton<CommunicateManager> {
+		private int playerID;
+
+		public int PlayerId { get { return playerID; } }
+
+		void Awake() {
 			PhotonNetwork.ConnectUsingSettings("0.1");
 		}
 
-		// Update is called once per frame
-		void Update () {
+		void Start () {
+			JoinLobby();
+		}
 
+		void Update () {
+			
 		}
 
 		void OnGUI() {
-			GUILayout.Label(PhotonNetwork.connectionStateDetailed.ToString());
+			#if UNITY_EDITOR
+				GUILayout.Label(PhotonNetwork.connectionStateDetailed.ToString());
+			#endif
 		}
-		/*
-		public override void OnJoinedLobby() {
-			PhotonNetwork.JoinRandomRoom();
-		}*/
+		
+		public bool JoinLobby() {
+			return PhotonNetwork.JoinLobby();
+		}
 
-		void OnPhotonRandomJoinFailed() {
-			Debug.Log("Can't Join Lobby");
-			PhotonNetwork.CreateRoom(null);
+		public void CreateRoom(RoomOptions _roomOption) {
+			if(PhotonNetwork.JoinLobby()) {
+				PhotonNetwork.CreateRoom(string.Format("Room {0}", PhotonNetwork.GetRoomList().Length), _roomOption, TypedLobby.Default);
+				playerID = 0;
+				Debug.Log("Created Room");
+			} else {
+				CreateRoom(_roomOption);
+			}
+		}
+
+		public void JoinRoom(string _roomName) {
+			if(PhotonNetwork.JoinLobby()) {
+				PhotonNetwork.JoinRoom(_roomName);
+				playerID = 1;
+				Debug.Log("Joined Room");
+			} else {
+				JoinRoom(_roomName);
+			}
+		}
+
+		public RoomInfo[] GetRooms() {
+			return PhotonNetwork.GetRoomList();
+		}
+
+		public bool CheckPlayer() {
+			if(PhotonNetwork.otherPlayers.Length > 0) {
+				return true;
+			}
+			return false;
+		}
+
+		//Photon
+		public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
+
 		}
 	}
 }
