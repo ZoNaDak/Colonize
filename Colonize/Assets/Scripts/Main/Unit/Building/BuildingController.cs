@@ -7,8 +7,9 @@ namespace Colonize.Unit.Building {
 		
 		private static List<Vector2> producePosList = new List<Vector2>(16);
 
-		private float pieceProduceTime;
 		private int producePosIdx;
+
+		static private Piece.PieceManager pieceManager;
 
 		void Awake() {
 			if(producePosList.Count == 0) {
@@ -17,20 +18,13 @@ namespace Colonize.Unit.Building {
 		}
 
 		void Start () {
-
+			if(this.photonView.isMine) {
+				StartCoroutine(CreatingUnit());
+			}
 		}
 
 		void Update () {
-			this.pieceProduceTime += Time.deltaTime;
-			if(this.pieceProduceTime >= this.status.produceCompleteTime) {
-				this.pieceProduceTime = 0.0f;
-				Vector2 producePos = producePosList[producePosIdx] + (Vector2)this.transform.position;
-				producePosIdx++;
-				if(producePosIdx >= producePosList.Count) {
-					producePosIdx = 0;
-				}
-				Piece.PieceManager.Instance.CreateUnit(Piece.PieceType.SwordMan, producePos);
-			}
+			
 		}
 
 		private void CreateProducePos() {
@@ -56,10 +50,39 @@ namespace Colonize.Unit.Building {
 			producePosList.Add(new Vector2(-64.0f, -64.0f));
 		}
 
-		public override void SetData(int _playerId, BuildingStatus _status, Sprite _sprite) {
+		[PunRPC]
+		protected override void SetDataOnPhoton(int _playerId, BuildingStatus _status, string _spriteName) {
 			this.playerId = _playerId;
 			this.status = _status;
-			this.spriteRenderer.sprite = _sprite;
+			this.spriteRenderer.sprite = Pattern.Factory.SpriteFactory.Instance.GetSprite("PiecesAtlas", string.Format(_spriteName, _status.name));
+		}
+
+		internal static void SetPieceManager(Piece.PieceManager _pieceManager) {
+			pieceManager = _pieceManager;
+		}
+
+		//Coroutine
+		private IEnumerator CreatingUnit() {
+			yield return new WaitUntil(() => PhotonNetwork.connectionStateDetailed == ClientState.Joined);
+			
+			while(true) {
+				yield return new WaitForSecondsRealtime(this.status.produceCompleteTime);
+				Vector2 producePos = producePosList[producePosIdx] + (Vector2)this.transform.position;
+				producePosIdx++;
+				if(producePosIdx >= producePosList.Count) {
+					producePosIdx = 0;
+				}
+				pieceManager.CreateUnit(Piece.PieceType.SwordMan, producePos);
+			}
+		}
+
+		//Photon
+		public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
+
+		}
+
+		public override void SetData(int _playerId, BuildingStatus _status, string _spriteName) {
+			this.photonView.RPC("SetDataOnPhoton", PhotonTargets.AllBuffered, _playerId, _status, _spriteName);
 		}
 	}
 }

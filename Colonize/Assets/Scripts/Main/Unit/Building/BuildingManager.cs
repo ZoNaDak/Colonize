@@ -6,7 +6,9 @@ using UnityEngine;
 
 namespace Colonize.Unit.Building {
 	public sealed class BuildingManager : UnitManager<BuildingManager, BuildingController, BuildingStatus, BuildingType> {
-		
+
+		[SerializeField] private DefaultManager.GameController gameController;
+
 		void Awake () {
 			AwakeManager("BuildingInfo", "Building");
 		}
@@ -37,7 +39,7 @@ namespace Colonize.Unit.Building {
 
 		public override void CreateUnit(BuildingType _type, Vector2 _pos) {
 			if(this.playerId == -1) {
-				this.playerId = DefaultManager.GameController.Instance.PlayerId;
+				this.playerId = gameController.PlayerId;
 				switch(this.playerId) {
 					case 0:
 						this.pieceSpriteName = "BP_{0}";
@@ -52,13 +54,12 @@ namespace Colonize.Unit.Building {
 
 			try {
 				GameObject buildingPrefab = Pattern.Factory.PrefabFactory.Instance.FindPrefab("Buildings", _type.ToString());
-				BuildingController building = Instantiate(buildingPrefab
-					, new Vector3(_pos.x, _pos.y, buildingPrefab.transform.position.z)
-					, Quaternion.identity
-					, this.transform).GetComponent<BuildingController>();
+				BuildingController building = PhotonNetwork.Instantiate(string.Format("Prefabs/Buildings/{0}", _type.ToString())
+				, new Vector3(_pos.x, _pos.y, buildingPrefab.transform.position.z)
+				, Quaternion.identity, 0).GetComponent<BuildingController>();
+				building.transform.SetParent(this.transform);
 				BuildingStatus status = this.unitInfoDictionary[_type];
-				building.SetData(this.playerId, status
-					, Pattern.Factory.SpriteFactory.Instance.GetSprite("PiecesAtlas", string.Format(pieceSpriteName, status.name)));
+				building.SetData(this.playerId, status, this.pieceSpriteName);
 				this.unitList.Add(building);
 			} catch(System.NullReferenceException ex) {
 				throw ex;

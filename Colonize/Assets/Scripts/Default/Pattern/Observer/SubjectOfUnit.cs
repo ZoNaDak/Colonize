@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Pattern.Observer {
-	public abstract class SubjectOfUnit<T> : MonoBehaviour 
+	public abstract class SubjectOfUnit<T> : Photon.MonoBehaviour
 		where T : SubjectOfUnit<T> {
 		protected static List<IObserverOfUnit<T>> observerList = new List<IObserverOfUnit<T>>();
 

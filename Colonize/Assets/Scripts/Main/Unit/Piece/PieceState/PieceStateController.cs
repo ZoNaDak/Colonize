@@ -56,7 +56,6 @@ namespace Colonize.Unit.Piece {
 			this.currentState.StopState();
 			this.currentState = this.stateList[(int)_type];
 			this.currentState.StartState();
-			Debug.Log(_type);
 		}
 
 		internal void SetCurrentMovePosToNext() {

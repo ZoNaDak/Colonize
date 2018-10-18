@@ -4,7 +4,7 @@ using UnityEngine;
 using Photon;
 
 namespace Communicate {
-	public class CommunicateManager : Pattern.Singleton.PhotonMonoSingleton<CommunicateManager> {
+	public class CommunicateManager : Photon.MonoBehaviour {
 		private int playerID;
 
 		public int PlayerId { get { return playerID; } }
@@ -64,7 +64,7 @@ namespace Communicate {
 
 		//Photon
 		public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
-
+			
 		}
 	}
 }

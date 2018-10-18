@@ -36,4 +36,6 @@ MonoBehaviour:
   - PunRespawn
   - RequestForPickupItems
   - RequestForPickupTimes
+  - SetData
+  - SetDataOnPhoton
   DisableAutoOpenWizard: 1

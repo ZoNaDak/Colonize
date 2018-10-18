@@ -10,7 +10,6 @@ namespace Colonize.Unit {
 
 		protected TStatus status;
 		protected int playerId;
-		
 		protected bool dead;
 		protected int unitHp;
 
@@ -21,13 +20,17 @@ namespace Colonize.Unit {
 		public TStatus Status { get { return status; } }
 		public bool Dead { get { return dead; } }
 
-		public abstract void SetData(int _playerId, TStatus _status, Sprite _sprte);
+		protected abstract void SetDataOnPhoton(int _playerId, TStatus _status, string _spriteName);
 
 		protected override void Notify() {
 			for(int i = 0; i < observerList.Count; ++i) {
 				observerList[i].OnNotify(this);
 			}
 		}
+
+		//Photon
+		[PunRPC]
+		public abstract void SetData(int _playerId, TStatus _status, string _spriteName);
 	}
 }
 

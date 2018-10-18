@@ -11,19 +11,18 @@ namespace Colonize.ControllUI.ControllBoard {
 		private float clickedTime;
 		private bool drag = false;
 		private Unit.Piece.PieceType selectedPieceType;
-		private Unit.Piece.PieceManager pieceManager;
 
 		private System.Action OnClick;
 
 		[SerializeField] private YellowRect yellowRect;
 		[SerializeField] private MyCamera.MainCameraController mainCamera;
+		[SerializeField] private Unit.Piece.PieceManager pieceManager;
 
 		void Start () {
 			this.rectTransform = (this.transform as RectTransform);
 			blockSize.x = rectTransform.sizeDelta.x / Map.MapManager.Instance.LandNumX;
 			blockSize.y = rectTransform.sizeDelta.y / Map.MapManager.Instance.LandNumY;
 			this.yellowRect.LandSize = Map.MapManager.Instance.GetLandSize();
-			pieceManager = Unit.Piece.PieceManager.Instance as Unit.Piece.PieceManager;
 		}
 
 		void Update () {

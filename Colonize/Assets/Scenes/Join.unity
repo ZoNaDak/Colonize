@@ -824,6 +824,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5143624d85f691f42bbc238de8981108, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  communicator: {fileID: 293541991}
   rooms: {fileID: 1084766116}
   roomPrefab: {fileID: 1121746289573768, guid: 1896c3adb9c270644a2844e816ca12cc, type: 2}
   refreshButton: {fileID: 1277125885}

@@ -6,7 +6,7 @@ using System.Linq;
 using UnityEngine;
 
 namespace Colonize.Unit {
-	public abstract class UnitManager<T, TController, TStatus, TType> : Pattern.Singleton.MonoSingleton<UnitManager<T, TController, TStatus, TType>>
+	public abstract class UnitManager<T, TController, TStatus, TType> : MonoBehaviour
 		where T : class
 		where TController : UnitController<TController, TStatus>
 		where TStatus : struct

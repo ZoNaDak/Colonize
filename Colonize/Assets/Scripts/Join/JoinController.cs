@@ -6,11 +6,12 @@ using UnityEngine.SceneManagement;
 
 namespace Colonize.Join {
 	public class JoinController : Pattern.Singleton.MonoSingleton<JoinController> {
-		private Communicate.CommunicateManager communicator;
+		
 		private List<Room.RoomController> roomList = new List<Room.RoomController>();
 		private int waitTextPeriodNum;
 		private Coroutine wait;
 
+		[SerializeField] private Communicate.CommunicateManager communicator;
 		[SerializeField] private GameObject rooms;
 		[SerializeField] private GameObject roomPrefab;
 		[SerializeField] private GameObject refreshButton;
@@ -20,7 +21,6 @@ namespace Colonize.Join {
 		void Awake() {
 			Screen.SetResolution(360, 640, false);
 
-			this.communicator = Communicate.CommunicateManager.Instance;
 			DontDestroyOnLoad(this.communicator.gameObject);
 		}
 
@@ -63,9 +63,6 @@ namespace Colonize.Join {
 		public void JoinRoom(Room.RoomController _room) {
 			communicator.JoinRoom(_room.RoomName);
 			ClearRoomList();
-			this.refreshButton.SetActive(false);
-			this.createRoomButton.SetActive(false);
-			this.waitText.gameObject.SetActive(true);
 			SceneManager.LoadScene("Main");
 		}
 

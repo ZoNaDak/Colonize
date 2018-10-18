@@ -1,9 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using ExitGames.Client.Photon;
 
 namespace Colonize.DefaultManager {
-	public class GameController : Pattern.Singleton.MonoSingleton<GameController> {
+	public class GameController : MonoBehaviour {
 		private int playerID;
 		private int playerNum;
 		private Communicate.CommunicateManager communicator;
@@ -23,15 +24,30 @@ namespace Colonize.DefaultManager {
 			//SetResoultion
 			//Screen.SetResolution(720, 1280, false);
 			Screen.SetResolution(360, 640, false);
-
-			communicator = Communicate.CommunicateManager.Instance;
+			
+			communicator = GameObject.FindGameObjectWithTag("Communicator").GetComponentInChildren<Communicate.CommunicateManager>();
 
 			this.playerID = communicator.PlayerId;
 			this.playerNum = 2;
+
+			//Setting Serialization Of CustomType
+			PhotonPeer.RegisterType(typeof(Unit.Building.BuildingStatus), (byte)100, Unit.Building.BuildingStatus.Serialize, Unit.Building.BuildingStatus.Deserialize);
+			PhotonPeer.RegisterType(typeof(Unit.Piece.PieceStatus), (byte)101, Unit.Piece.PieceStatus.Serialize, Unit.Piece.PieceStatus.Deserialize);
 		}
 
 		// Use this for initialization
 		void Start () {
+			StartCoroutine(Initialize());
+		}
+
+		// Update is called once per frame
+		void Update () {
+
+		}
+
+		private IEnumerator Initialize() {
+			yield return new WaitUntil(() => PhotonNetwork.connectionStateDetailed == ClientState.Joined);
+			yield return new WaitForSecondsRealtime(3.0f);
 			//SetAStar
 			Utility.Algorithm.AStar.AStarManager.Awake(Map.MapManager.Instance.LandNumX, Map.MapManager.Instance.LandNumY);
 			//
@@ -49,11 +65,6 @@ namespace Colonize.DefaultManager {
 			}
 			this.mainCamera.SetPos(landPos);
 			this.buildingManager.CreateUnit(Unit.Building.BuildingType.Commander, landPos);
-		}
-
-		// Update is called once per frame
-		void Update () {
-
 		}
 	}
 }
