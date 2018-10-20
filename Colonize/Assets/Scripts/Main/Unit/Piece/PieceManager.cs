@@ -10,8 +10,9 @@ namespace Colonize.Unit.Piece {
 		[SerializeField] private DefaultManager.GameController gameController;
 
 		void Awake() {
-			AwakeManager("PieceInfo", "Piece");
+			PieceController.SetPieceManager(this);
 			Building.BuildingController.SetPieceManager(this);
+			StartCoroutine(StartManager("PieceInfo", "Piece"));
 		}
 
 		void Start () {
@@ -37,6 +38,7 @@ namespace Colonize.Unit.Piece {
 			}
 		}
 
+		//overide
 		protected override IEnumerator SaveUnitInfoWithCoroutine (XmlNodeList _xmlNodes, string _xmlName) {
 			yield return ControllUI.UnitControll.UnitControllBar.Instance.WaitForReady();
 
@@ -58,20 +60,6 @@ namespace Colonize.Unit.Piece {
 		}
 
 		public override void CreateUnit(PieceType _type, Vector2 _pos) {
-			if(this.playerId == -1) {
-				this.playerId = gameController.PlayerId;
-				switch(this.playerId) {
-					case 0:
-						this.pieceSpriteName = "BP_{0}";
-					break;
-					case 1:
-						this.pieceSpriteName = "WP_{0}";
-					break;
-					default:
-						throw new System.ArgumentOutOfRangeException("Player Id is Not Correct!");
-				}
-			}
-
 			try {
 				GameObject piecePrefab = Pattern.Factory.PrefabFactory.Instance.FindPrefab("Pieces", _type.ToString());
 				PieceController piece = PhotonNetwork.Instantiate(string.Format("Prefabs/Pieces/{0}", _type.ToString())
@@ -79,7 +67,7 @@ namespace Colonize.Unit.Piece {
 					, Quaternion.identity, 0).GetComponent<PieceController>();
 				piece.transform.SetParent(this.transform);
 				PieceStatus status = this.unitInfoDictionary[_type];
-				piece.SetData(this.playerId, status, this.pieceSpriteName);
+				piece.SetData(this.playerId, _type);
 				this.unitList.Add(piece);
 			} catch(System.NullReferenceException ex) {
 				throw ex;

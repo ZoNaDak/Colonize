@@ -1,10 +1,13 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Colonize.Unit {
-	public abstract class UnitController<T, TStatus> : Pattern.Observer.SubjectOfUnit<UnitController<T, TStatus>>
-		where T : class where TStatus : struct {
+	public abstract class UnitController<T, TStatus, TType> : Pattern.Observer.SubjectOfUnit<UnitController<T, TStatus, TType>>
+		where T : class
+		where TStatus : struct
+		where TType : struct, IComparable, IFormattable, IConvertible{
 		
 		protected static int unitNum;
 
@@ -20,7 +23,7 @@ namespace Colonize.Unit {
 		public TStatus Status { get { return status; } }
 		public bool Dead { get { return dead; } }
 
-		protected abstract void SetDataOnPhoton(int _playerId, TStatus _status, string _spriteName);
+		protected abstract void SetDataOnPhoton(int _playerId, TType _type);
 
 		protected override void Notify() {
 			for(int i = 0; i < observerList.Count; ++i) {
@@ -30,7 +33,7 @@ namespace Colonize.Unit {
 
 		//Photon
 		[PunRPC]
-		public abstract void SetData(int _playerId, TStatus _status, string _spriteName);
+		public abstract void SetData(int _playerId, TType _type);
 	}
 }
 

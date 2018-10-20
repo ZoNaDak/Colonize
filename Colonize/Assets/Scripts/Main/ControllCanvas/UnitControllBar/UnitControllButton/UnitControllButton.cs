@@ -12,7 +12,7 @@ namespace Colonize.ControllUI.UnitControll {
 		End
 	}
 
-	public class UnitControllButton : MonoBehaviour, Pattern.Observer.IObserverOfUnit<Unit.UnitController<Unit.Piece.PieceController, Unit.Piece.PieceStatus>> {
+	public class UnitControllButton : MonoBehaviour, Pattern.Observer.IObserverOfUnit<Unit.UnitController<Unit.Piece.PieceController, Unit.Piece.PieceStatus, Unit.Piece.PieceType>> {
 		private static UnitControllBar unitControllBar;
 		private static RedRect redRect;
 		private static ControllBoard.ControllBoard controllBoard;
@@ -85,7 +85,7 @@ namespace Colonize.ControllUI.UnitControll {
 		}
 
 		//Interface Fuction
-		public void OnNotify(Unit.UnitController<Unit.Piece.PieceController, Unit.Piece.PieceStatus> _piece) {
+		public void OnNotify(Unit.UnitController<Unit.Piece.PieceController, Unit.Piece.PieceStatus, Unit.Piece.PieceType> _piece) {
 			unitCountText.text = _piece.UnitNum.ToString();
 		}
 	}

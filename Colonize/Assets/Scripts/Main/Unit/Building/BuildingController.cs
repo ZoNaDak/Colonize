@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Colonize.Unit.Building {
-	public sealed class BuildingController : UnitController<BuildingController, BuildingStatus> {
+	public sealed class BuildingController : UnitController<BuildingController, BuildingStatus, BuildingType> {
 		
 		private static List<Vector2> producePosList = new List<Vector2>(16);
 
 		private int producePosIdx;
 
+		static private Building.BuildingManager buildingManager;
 		static private Piece.PieceManager pieceManager;
 
 		void Awake() {
@@ -50,11 +51,8 @@ namespace Colonize.Unit.Building {
 			producePosList.Add(new Vector2(-64.0f, -64.0f));
 		}
 
-		[PunRPC]
-		protected override void SetDataOnPhoton(int _playerId, BuildingStatus _status, string _spriteName) {
-			this.playerId = _playerId;
-			this.status = _status;
-			this.spriteRenderer.sprite = Pattern.Factory.SpriteFactory.Instance.GetSprite("PiecesAtlas", string.Format(_spriteName, _status.name));
+		internal static void SetBuildingManager(BuildingManager _buildingManager) {
+			buildingManager = _buildingManager;
 		}
 
 		internal static void SetPieceManager(Piece.PieceManager _pieceManager) {
@@ -81,8 +79,16 @@ namespace Colonize.Unit.Building {
 
 		}
 
-		public override void SetData(int _playerId, BuildingStatus _status, string _spriteName) {
-			this.photonView.RPC("SetDataOnPhoton", PhotonTargets.AllBuffered, _playerId, _status, _spriteName);
+		public override void SetData(int _playerId, BuildingType _type) {
+			SetDataOnPhoton(_playerId, _type);
+			this.photonView.RPC("SetDataOnPhoton", PhotonTargets.Others, _playerId, _type);
+		}
+
+		[PunRPC]
+		protected override void SetDataOnPhoton(int _playerId, BuildingType _type) {
+			this.playerId = _playerId;
+			this.status = buildingManager.UnitInfoDictionary[_type];
+			this.spriteRenderer.sprite = Pattern.Factory.SpriteFactory.Instance.GetSprite("PiecesAtlas", string.Format(buildingManager.PieceSpriteNames[this.playerId], this.status.name));
 		}
 	}
 }

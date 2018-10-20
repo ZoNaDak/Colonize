@@ -4,7 +4,8 @@ using UnityEngine;
 using ExitGames.Client.Photon;
 
 namespace Colonize.DefaultManager {
-	public class GameController : MonoBehaviour {
+	public class GameController : Pattern.Singleton.MonoSingleton<GameController> {
+		private bool ready;
 		private int playerID;
 		private int playerNum;
 		private Communicate.CommunicateManager communicator;
@@ -13,6 +14,7 @@ namespace Colonize.DefaultManager {
 		[SerializeField] private Unit.Piece.PieceManager pieceManager;
 		[SerializeField] private MyCamera.MainCameraController mainCamera;
 
+		public bool Ready { get { return ready; } }
 		public int PlayerId { get { return playerID; } }
 		public int PlayerNum { get { return playerNum; } }
 
@@ -27,8 +29,7 @@ namespace Colonize.DefaultManager {
 			
 			communicator = GameObject.FindGameObjectWithTag("Communicator").GetComponentInChildren<Communicate.CommunicateManager>();
 
-			this.playerID = communicator.PlayerId;
-			this.playerNum = 2;
+			PhotonNetwork.isMessageQueueRunning = true;
 
 			//Setting Serialization Of CustomType
 			PhotonPeer.RegisterType(typeof(Unit.Building.BuildingStatus), (byte)100, Unit.Building.BuildingStatus.Serialize, Unit.Building.BuildingStatus.Deserialize);
@@ -47,6 +48,10 @@ namespace Colonize.DefaultManager {
 
 		private IEnumerator Initialize() {
 			yield return new WaitUntil(() => PhotonNetwork.connectionStateDetailed == ClientState.Joined);
+			this.playerID = communicator.PlayerId;
+			this.playerNum = 2;
+			this.ready = true;
+
 			yield return new WaitForSecondsRealtime(3.0f);
 			//SetAStar
 			Utility.Algorithm.AStar.AStarManager.Awake(Map.MapManager.Instance.LandNumX, Map.MapManager.Instance.LandNumY);

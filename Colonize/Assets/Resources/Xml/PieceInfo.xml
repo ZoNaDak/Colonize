@@ -5,6 +5,6 @@
         <Name>SwordMan</Name>
         <Hp>50</Hp>
         <Attack>10</Attack>
-        <Speed>2</Speed>
+        <Speed>5</Speed>
     </Piece>
 </PieceInfo>

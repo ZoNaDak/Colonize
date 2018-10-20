@@ -46,7 +46,8 @@ namespace Colonize.Join {
 		private IEnumerator OnWait() {
 			while(true) {
 				if(communicator.CheckPlayer()) {
-					SceneManager.LoadScene("Main");
+					communicator.JoinedRoom = true;
+					StartCoroutine(LoadMainScene());
 				}
 				waitText.text = "Wait";
 				for(int i = 0; i < waitTextPeriodNum; ++i) {
@@ -63,7 +64,7 @@ namespace Colonize.Join {
 		public void JoinRoom(Room.RoomController _room) {
 			communicator.JoinRoom(_room.RoomName);
 			ClearRoomList();
-			SceneManager.LoadScene("Main");
+			communicator.JoinedRoom = true;
 		}
 
 		//Button
@@ -99,6 +100,15 @@ namespace Colonize.Join {
 				room.Initialize(string.Format(roomFormat, i));
 				this.roomList.Add (room);
 			}
+		}
+
+		//Coroutine
+		IEnumerator LoadMainScene() {
+			PhotonNetwork.isMessageQueueRunning = false;
+
+			AsyncOperation ao = PhotonNetwork.LoadLevelAsync("Main");
+ 			//AsyncOperation ao = SceneManager.LoadSceneAsync("Main");
+ 			yield return ao;
 		}
 	}
 }

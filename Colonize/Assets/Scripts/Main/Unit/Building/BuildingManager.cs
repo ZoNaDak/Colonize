@@ -10,11 +10,11 @@ namespace Colonize.Unit.Building {
 		[SerializeField] private DefaultManager.GameController gameController;
 
 		void Awake () {
-			AwakeManager("BuildingInfo", "Building");
+			BuildingController.SetBuildingManager(this);
 		}
 
 		void Start () {
-			
+			StartCoroutine(StartManager("BuildingInfo", "Building"));
 		}
 
 		void Update () {
@@ -38,20 +38,6 @@ namespace Colonize.Unit.Building {
 		}
 
 		public override void CreateUnit(BuildingType _type, Vector2 _pos) {
-			if(this.playerId == -1) {
-				this.playerId = gameController.PlayerId;
-				switch(this.playerId) {
-					case 0:
-						this.pieceSpriteName = "BP_{0}";
-					break;
-					case 1:
-						this.pieceSpriteName = "WP_{0}";
-					break;
-					default:
-						throw new System.ArgumentOutOfRangeException("Player Id is Not Correct!");
-				}
-			}
-
 			try {
 				GameObject buildingPrefab = Pattern.Factory.PrefabFactory.Instance.FindPrefab("Buildings", _type.ToString());
 				BuildingController building = PhotonNetwork.Instantiate(string.Format("Prefabs/Buildings/{0}", _type.ToString())
@@ -59,7 +45,7 @@ namespace Colonize.Unit.Building {
 				, Quaternion.identity, 0).GetComponent<BuildingController>();
 				building.transform.SetParent(this.transform);
 				BuildingStatus status = this.unitInfoDictionary[_type];
-				building.SetData(this.playerId, status, this.pieceSpriteName);
+				building.SetData(this.playerId, _type);
 				this.unitList.Add(building);
 			} catch(System.NullReferenceException ex) {
 				throw ex;

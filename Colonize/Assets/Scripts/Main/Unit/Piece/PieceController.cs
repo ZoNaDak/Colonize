@@ -3,12 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Colonize.Unit.Piece {
-	public sealed class PieceController : UnitController<PieceController, PieceStatus> {		
+	public sealed class PieceController : UnitController<PieceController, PieceStatus, PieceType> {		
 		private PieceStateController stateController;
+
+		static private Piece.PieceManager pieceManager;
 
 		void Awake() {
 			stateController = new PieceStateController(this);
 			stateController.InitState();
+			if(!this.photonView.isMine) {
+				this.GetComponent<Rigidbody2D>().isKinematic = true;
+			}
 		}
 		
 		void Start () {
@@ -19,11 +24,8 @@ namespace Colonize.Unit.Piece {
 			
 		}
 
-		[PunRPC]
-		protected override void SetDataOnPhoton(int _playerId, PieceStatus _status, string _spriteName){
-			this.playerId = _playerId;
-			this.status = _status;
-			this.spriteRenderer.sprite = Pattern.Factory.SpriteFactory.Instance.GetSprite("PiecesAtlas", string.Format(_spriteName, _status.name));;
+		internal static void SetPieceManager(Piece.PieceManager _pieceManager) {
+			pieceManager = _pieceManager;
 		}
 
 		public void SetMoveState(List<Vector2> _movePosList) {
@@ -33,13 +35,25 @@ namespace Colonize.Unit.Piece {
 
 		//Photon
 		public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
-
+			if(stream.isWriting) {
+				stream.SendNext(this.transform.position);
+			} else if(stream.isReading) {
+				this.transform.position = (Vector3)stream.ReceiveNext();
+			}
 		}
 
-		public override void SetData(int _playerId, PieceStatus _status, string _spriteName) {
-			this.photonView.RPC("SetDataOnPhoton", PhotonTargets.AllBuffered, _playerId, _status, _spriteName);
+		public override void SetData(int _playerId, PieceType _type) {
+			SetDataOnPhoton(_playerId, _type);
+			this.photonView.RPC("SetDataOnPhoton", PhotonTargets.Others, _playerId, _type);
 			unitNum++;
 			this.Notify();
+		}
+
+		[PunRPC]
+		protected override void SetDataOnPhoton(int _playerId, PieceType _type){
+			this.playerId = _playerId;
+			this.status = pieceManager.UnitInfoDictionary[_type];
+			this.spriteRenderer.sprite = Pattern.Factory.SpriteFactory.Instance.GetSprite("PiecesAtlas", string.Format(pieceManager.PieceSpriteNames[this.playerId], this.status.name));
 		}
 	}
 }

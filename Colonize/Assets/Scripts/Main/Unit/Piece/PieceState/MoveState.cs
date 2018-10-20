@@ -24,11 +24,14 @@ namespace Colonize.Unit.Piece {
                     }
                 }
                 this.stateController.Controller.transform.Translate(moveDir.normalized * this.stateController.Controller.Status.speed);
-                yield return new WaitForSecondsRealtime(0.01f);
+                yield return new WaitForSecondsRealtime(0.05f);
             }
         }
 
         internal override void StartState() {
+            if(!this.stateController.Controller.photonView.isMine) {
+                return;
+            }
             this.coroutine = this.stateController.Controller.StartCoroutine(MoveCoroutine());
         }
 
