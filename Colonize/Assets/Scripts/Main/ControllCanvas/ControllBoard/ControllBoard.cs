@@ -77,6 +77,16 @@ namespace Colonize.ControllUI.ControllBoard {
 			this.selectedPieceType = _pieceType;
 		}
 
+		public Vector2 GetBoardPosFromWorldPos(Vector2 _worldPosition) {
+			Vector2 returnPos = _worldPosition + Map.MapManager.Instance.GetLandSize() * 0.5f;
+			returnPos /= Map.MapManager.Instance.GetLandSize();
+			returnPos *= (this.rectTransform.sizeDelta / new Vector2(Map.MapManager.Instance.LandNumX, Map.MapManager.Instance.LandNumY));
+			returnPos -= this.rectTransform.sizeDelta * 0.5f;
+			Debug.Log(returnPos);
+			return returnPos;
+		}
+
+		//Delegate
 		public System.Action ClickNoOption() {
 			return () => {};
 		}

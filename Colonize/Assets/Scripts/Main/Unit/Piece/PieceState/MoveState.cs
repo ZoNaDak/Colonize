@@ -24,7 +24,7 @@ namespace Colonize.Unit.Piece {
                     }
                 }
                 this.stateController.Controller.transform.Translate(moveDir.normalized * this.stateController.Controller.Status.speed);
-                yield return new WaitForSecondsRealtime(0.05f);
+                yield return new WaitForSecondsRealtime(0.01f);
             }
         }
 

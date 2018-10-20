@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Colonize.ControllUI.ControllBoard.MiniUnit;
 
 namespace Colonize.Unit.Building {
 	public sealed class BuildingController : UnitController<BuildingController, BuildingStatus, BuildingType> {
@@ -88,7 +89,8 @@ namespace Colonize.Unit.Building {
 		protected override void SetDataOnPhoton(int _playerId, BuildingType _type) {
 			this.playerId = _playerId;
 			this.status = buildingManager.UnitInfoDictionary[_type];
-			this.spriteRenderer.sprite = Pattern.Factory.SpriteFactory.Instance.GetSprite("PiecesAtlas", string.Format(buildingManager.PieceSpriteNames[this.playerId], this.status.name));
+			this.spriteRenderer.sprite = Pattern.Factory.SpriteFactory.Instance.GetSprite("PiecesAtlas", string.Format(buildingManager.UnitSpriteNames[this.playerId], this.status.name));
+			MiniUnitManager.Instance.CreateMiniUnit(this);
 		}
 	}
 }

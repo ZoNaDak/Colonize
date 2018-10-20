@@ -12,11 +12,10 @@ namespace Colonize.Unit.Piece {
 		void Awake() {
 			PieceController.SetPieceManager(this);
 			Building.BuildingController.SetPieceManager(this);
-			StartCoroutine(StartManager("PieceInfo", "Piece"));
 		}
 
 		void Start () {
-			
+			StartCoroutine(StartManager("PieceInfo", "Piece"));
 		}
 
 		void Update () {

@@ -14,11 +14,11 @@ namespace Colonize.Unit {
 
 		protected Dictionary<TType, TStatus> unitInfoDictionary = new Dictionary<TType, TStatus>();
 		protected List<TController> unitList = new List<TController>();
-		protected List<string> pieceSpriteNames = new List<string>();
+		protected List<string> unitSpriteNames = new List<string>();
 		protected int playerId = -1;
 
 		internal Dictionary<TType, TStatus> UnitInfoDictionary { get { return unitInfoDictionary; } }
-		internal List<string> PieceSpriteNames { get { return pieceSpriteNames; } }
+		internal List<string> UnitSpriteNames { get { return unitSpriteNames; } }
 
 		public List<TController> UnitList { get { return unitList; } }
 		public int PlayerId { get { return playerId; } }
@@ -32,8 +32,8 @@ namespace Colonize.Unit {
 			try {
 				XmlNodeList xmlNodes = MyXml.XmlManager.LoadXmlNodes(_xmlHeadName, _xmlNodeName);
 				StartCoroutine(SaveUnitInfoWithCoroutine(xmlNodes, _xmlHeadName));
-				this.pieceSpriteNames.Add("BP_{0}");
-				this.pieceSpriteNames.Add("WP_{0}");
+				this.unitSpriteNames.Add("BP_{0}");
+				this.unitSpriteNames.Add("WP_{0}");
 			} catch (System.NullReferenceException ex) {
 				throw ex;
 			} catch (System.Exception ex) {

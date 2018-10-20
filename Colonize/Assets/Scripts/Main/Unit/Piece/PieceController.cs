@@ -35,11 +35,7 @@ namespace Colonize.Unit.Piece {
 
 		//Photon
 		public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
-			if(stream.isWriting) {
-				stream.SendNext(this.transform.position);
-			} else if(stream.isReading) {
-				this.transform.position = (Vector3)stream.ReceiveNext();
-			}
+			
 		}
 
 		public override void SetData(int _playerId, PieceType _type) {
@@ -53,7 +49,7 @@ namespace Colonize.Unit.Piece {
 		protected override void SetDataOnPhoton(int _playerId, PieceType _type){
 			this.playerId = _playerId;
 			this.status = pieceManager.UnitInfoDictionary[_type];
-			this.spriteRenderer.sprite = Pattern.Factory.SpriteFactory.Instance.GetSprite("PiecesAtlas", string.Format(pieceManager.PieceSpriteNames[this.playerId], this.status.name));
+			this.spriteRenderer.sprite = Pattern.Factory.SpriteFactory.Instance.GetSprite("PiecesAtlas", string.Format(pieceManager.UnitSpriteNames[this.playerId], this.status.name));
 		}
 	}
 }
