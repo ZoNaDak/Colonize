@@ -82,7 +82,6 @@ namespace Colonize.ControllUI.ControllBoard {
 			returnPos /= Map.MapManager.Instance.GetLandSize();
 			returnPos *= (this.rectTransform.sizeDelta / new Vector2(Map.MapManager.Instance.LandNumX, Map.MapManager.Instance.LandNumY));
 			returnPos -= this.rectTransform.sizeDelta * 0.5f;
-			Debug.Log(returnPos);
 			return returnPos;
 		}
 

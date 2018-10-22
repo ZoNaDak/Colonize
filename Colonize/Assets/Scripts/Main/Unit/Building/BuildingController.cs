@@ -29,6 +29,10 @@ namespace Colonize.Unit.Building {
 			
 		}
 
+		void OnDestroy() {
+			MiniUnitManager.Instance.DestroyMiniUnit(this);
+		}
+
 		private void CreateProducePos() {
 			//Rect Bottom
 			producePosList.Add(new Vector2(-32.0f, -64.0f));

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Colonize.ControllUI.ControllBoard.MiniUnit;
 
 namespace Colonize.Unit.Piece {
 	public sealed class PieceController : UnitController<PieceController, PieceStatus, PieceType> {		
@@ -22,6 +23,10 @@ namespace Colonize.Unit.Piece {
 
 		void Update () {
 			
+		}
+
+		void OnDestroy() {
+			MiniUnitManager.Instance.DestroyMiniUnit(this);
 		}
 
 		internal static void SetPieceManager(Piece.PieceManager _pieceManager) {
@@ -50,6 +55,7 @@ namespace Colonize.Unit.Piece {
 			this.playerId = _playerId;
 			this.status = pieceManager.UnitInfoDictionary[_type];
 			this.spriteRenderer.sprite = Pattern.Factory.SpriteFactory.Instance.GetSprite("PiecesAtlas", string.Format(pieceManager.UnitSpriteNames[this.playerId], this.status.name));
+			MiniUnitManager.Instance.CreateMiniUnit(this);
 		}
 	}
 }
