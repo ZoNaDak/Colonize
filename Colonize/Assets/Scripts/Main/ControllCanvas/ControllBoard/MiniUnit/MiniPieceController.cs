@@ -13,7 +13,7 @@ namespace Colonize.ControllUI.ControllBoard.MiniUnit {
 
 		
 		void Update () {
-			
+			CheckDead();
 		}
 
 		void LateUpdate() {
@@ -33,6 +33,12 @@ namespace Colonize.ControllUI.ControllBoard.MiniUnit {
 
 		public override void RemoveSelf() {
 			Destroy(this);
+		}
+
+		public override void CheckDead() {
+			if(this.unitController.Dead == true && MiniUnitManager.OnManager) {
+				MiniUnitManager.Instance.DestroyMiniUnit(this.unitController as PieceController);
+			}
 		}
 	}
 }

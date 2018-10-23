@@ -6,5 +6,8 @@
         <Hp>50</Hp>
         <Attack>10</Attack>
         <Speed>2</Speed>
+        <VisualRange>160</VisualRange>
+        <AttackRange>40</AttackRange>
+        <AttackCooltime>1</AttackCooltime>
     </Piece>
 </PieceInfo>

@@ -104,7 +104,7 @@ namespace Colonize.ControllUI.ControllBoard {
 
 		public System.Action ClickOnAttackOption() {
 			return () => {
-				Debug.Log("ClickOnAttackOption");
+				this.pieceManager.AttackPieces(selectedPieceType, GetLandIdxForClickBoard());
 			};
 		}
 	}

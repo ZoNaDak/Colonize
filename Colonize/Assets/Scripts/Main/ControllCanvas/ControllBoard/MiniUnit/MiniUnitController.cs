@@ -15,6 +15,8 @@ namespace Colonize.ControllUI.ControllBoard.MiniUnit {
 
 		[SerializeField] protected Image unitImage;
 
+		public abstract void CheckDead();
+
 		public abstract void Initialize(int _playerId, TController _controller);
 		public abstract void RemoveSelf();
 	}

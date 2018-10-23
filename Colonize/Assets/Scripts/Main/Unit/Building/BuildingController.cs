@@ -29,10 +29,6 @@ namespace Colonize.Unit.Building {
 			
 		}
 
-		void OnDestroy() {
-			MiniUnitManager.Instance.DestroyMiniUnit(this);
-		}
-
 		private void CreateProducePos() {
 			//Rect Bottom
 			producePosList.Add(new Vector2(-32.0f, -64.0f));
@@ -64,6 +60,22 @@ namespace Colonize.Unit.Building {
 			pieceManager = _pieceManager;
 		}
 
+		//override
+		public override void OnDestroy() {
+			
+		}
+
+		public override int Damaged(int _damage) {
+			DamagedOnPhoton(_damage);
+			this.photonView.RPC("DamagedOnPhoton", PhotonTargets.Others, _damage);
+			return this.status.hp;
+		}
+
+		public override void SetData(int _playerId, BuildingType _type) {
+			SetDataOnPhoton(_playerId, _type);
+			this.photonView.RPC("SetDataOnPhoton", PhotonTargets.Others, _playerId, _type);
+		}
+
 		//Coroutine
 		private IEnumerator CreatingUnit() {
 			yield return new WaitUntil(() => PhotonNetwork.connectionStateDetailed == ClientState.Joined);
@@ -84,17 +96,21 @@ namespace Colonize.Unit.Building {
 
 		}
 
-		public override void SetData(int _playerId, BuildingType _type) {
-			SetDataOnPhoton(_playerId, _type);
-			this.photonView.RPC("SetDataOnPhoton", PhotonTargets.Others, _playerId, _type);
-		}
-
 		[PunRPC]
 		protected override void SetDataOnPhoton(int _playerId, BuildingType _type) {
 			this.playerId = _playerId;
 			this.status = buildingManager.UnitInfoDictionary[_type];
 			this.spriteRenderer.sprite = Pattern.Factory.SpriteFactory.Instance.GetSprite("PiecesAtlas", string.Format(buildingManager.UnitSpriteNames[this.playerId], this.status.name));
 			MiniUnitManager.Instance.CreateMiniUnit(this);
+		}
+
+		[PunRPC]
+		protected override void DamagedOnPhoton(int _damage) {
+			this.status.hp -= _damage;
+			if(this.status.hp <= 0) {
+				this.dead = true;
+				buildingManager.RemoveUnit(this);
+			}
 		}
 	}
 }

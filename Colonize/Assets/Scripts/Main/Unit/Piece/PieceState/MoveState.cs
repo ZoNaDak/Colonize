@@ -3,27 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Colonize.Unit.Piece {
-    public class MoveState : PieceState {
-        private static float CheckDist = 10.0f;
-
-        internal MoveState(PieceStateController _stateController)
-         : base(PieceStateType.Stand, _stateController){
+    public class Move : PieceAction {
+        internal Move(PieceStateController _stateController)
+         : base(PieceActionType.Move, _stateController){
 
         }
 
         internal IEnumerator MoveCoroutine() {
             while (true) {
-                Vector2 moveDir = this.stateController.CurrentMovePos - (Vector2)this.stateController.Controller.transform.position;
-                if(moveDir.magnitude <= CheckDist) {
-                    this.stateController.SetCurrentMovePosToNext();
-                    if(this.stateController.MovePosList == null) {
-                        this.stateController.ChangeState(PieceStateType.Stand);
-                        break;
-                    } else {
-                        moveDir = this.stateController.CurrentMovePos - (Vector2)this.stateController.Controller.transform.position;
-                    }
+                if(this.stateController.MovePosList == null || this.stateController.MovePosList.Count == 0) {
+                    this.stateController.ChangeState(PieceStateType.Stand);
+                    break;
                 }
+                Vector2 moveDir = this.stateController.CurrentMovePos - (Vector2)this.stateController.Controller.transform.position;
                 this.stateController.Controller.transform.Translate(moveDir.normalized * this.stateController.Controller.Status.speed);
+                Vector2 distance = this.stateController.CurrentMovePos - (Vector2)this.stateController.Controller.transform.position;
+                if(distance.magnitude <= checkMovePointDist) {
+                    this.stateController.SetCurrentMovePosToNext();
+                }
                 yield return new WaitForSecondsRealtime(0.01f);
             }
         }
@@ -36,7 +33,9 @@ namespace Colonize.Unit.Piece {
         }
 
         internal override void StopState() {
-            this.stateController.Controller.StopCoroutine(this.coroutine);
+            if(this.coroutine != null) {
+                this.stateController.Controller.StopCoroutine(this.coroutine);
+            }
         }
     }
 }

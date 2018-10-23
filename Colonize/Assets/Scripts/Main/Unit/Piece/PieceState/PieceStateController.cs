@@ -1,15 +1,38 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Colonize.Unit.Piece {
-	public class PieceStateController : StateController<PieceState, PieceStateType, PieceController> {
+	public enum PieceStateType {
+		Stand,
+		Move,
+		Attack,
+		End
+	}
 
+	public class PieceStateController : StateController<PieceAction, PieceStateType, PieceController, PieceActionType> {
 		private List<Vector2> movePosList;
 		private int currentMovePosIdx;
+		private bool isAttackalbe;
+		private PieceStateType stateType;
+		private IUnit targetUnit;
+
+		private static int checkableLayerMask = ~((1 << LayerMask.NameToLayer("Building")) | (1 << LayerMask.NameToLayer("Piece")));
+
+		internal IUnit TargetUnit { get { return targetUnit; } }
 
 		public List<Vector2> MovePosList { get { return movePosList; } }
-		public Vector2 CurrentMovePos { get { return movePosList[currentMovePosIdx]; } }
+		public PieceStateType StateType { get { return stateType; } }
+
+		public Vector2 CurrentMovePos { 
+			get {
+				if(currentMovePosIdx >= movePosList.Count) {
+					return movePosList.Last();
+				} 
+				return movePosList[currentMovePosIdx];
+			} 
+		}
 
 		public PieceStateController(PieceController _controller)
 		 : base(_controller) {
@@ -30,20 +53,48 @@ namespace Colonize.Unit.Piece {
 			}
 		}
 
+		internal void SetCurrentMovePosToNext() {
+			this.currentMovePosIdx++;
+			if(this.currentMovePosIdx >= this.movePosList.Count) {
+				this.movePosList = null;
+				this.currentMovePosIdx = -1;
+			}
+		}
+
+		internal bool CheckIsEnemyAroundHere() {
+			Collider2D[] unitInRange = Physics2D.OverlapCircleAll(this.controller.transform.position, this.controller.Status.visualRange, checkableLayerMask);
+			var enemiesInRange = from enemy in unitInRange
+				where enemy.gameObject != this.controller.gameObject && !enemy.GetComponentInChildren<IUnit>().IsMine() && !enemy.GetComponentInChildren<IUnit>().GetDead()
+				select enemy.GetComponentInChildren<IUnit>();
+			float minDist = Mathf.Infinity;
+			bool check = false;
+			foreach(var enemy in enemiesInRange) {
+				float dist = Vector2.Distance(this.controller.transform.position, enemy.GetPos());
+				if(dist < minDist) {
+					minDist = dist;
+					targetUnit = enemy;
+					check = true;
+				}
+			}
+			return check;
+		}
+
+		//override
 		internal override void InitState() {
-			for(int i = 0; i < (int)PieceStateType.End; ++i) {
+			for(int i = 0; i < (int)PieceActionType.End; ++i) {
 				this.stateList.Add(null);
 			}
-			for(int i = 0; i < (int)PieceStateType.End; ++i) {
-				switch((PieceStateType)i) {
-					case PieceStateType.Stand:
-						this.stateList[i] = new StandState(this);
+
+			for(int i = 0; i < (int)PieceActionType.End; ++i) {
+				switch((PieceActionType)i) {
+					case PieceActionType.Stand:
+						this.stateList[i] = new Stand(this);
 					break;
-					case PieceStateType.Move:
-						this.stateList[i] = new MoveState(this);
+					case PieceActionType.Move:
+						this.stateList[i] = new Move(this);
 					break;
-					case PieceStateType.Attack:
-						this.stateList[i] = new AttackState(this);
+					case PieceActionType.Attack:
+						this.stateList[i] = new Attack(this);
 					break;
 					default:
 						throw new System.NotImplementedException("Not Impelement InitStateType In Switch Sentence");
@@ -53,16 +104,38 @@ namespace Colonize.Unit.Piece {
 		}
 
 		internal override void ChangeState(PieceStateType _type) {
-			this.currentState.StopState();
-			this.currentState = this.stateList[(int)_type];
-			this.currentState.StartState();
+			switch(_type) {
+				case PieceStateType.Stand:
+					this.currentState.StopState();
+					this.isAttackalbe = true;
+					this.currentState = this.stateList[(int)PieceActionType.Stand];
+					this.currentState.StartState();
+				break;
+				case PieceStateType.Move:
+					this.currentState.StopState();
+					this.isAttackalbe = false;
+					this.currentState = this.stateList[(int)PieceActionType.Move];
+					this.currentState.StartState();
+				break;
+				case PieceStateType.Attack:
+					this.currentState.StopState();
+					this.isAttackalbe = true;
+					this.currentState = this.stateList[(int)PieceActionType.Move];
+					this.currentState.StartState();
+				break;
+				default:
+					throw new System.ArgumentException("PieceStateType is Not Correctable! : " + _type);
+			}
+			stateType = _type;
 		}
 
-		internal void SetCurrentMovePosToNext() {
-			this.currentMovePosIdx++;
-			if(this.currentMovePosIdx >= this.movePosList.Count) {
-				this.movePosList = null;
-				this.currentMovePosIdx = -1;
+		internal override void Update() {
+			if(this.isAttackalbe) {
+				if(this.currentState.Type != PieceActionType.Attack && CheckIsEnemyAroundHere()){
+					this.currentState.StopState();
+					this.currentState = this.stateList[(int)PieceActionType.Attack];
+					this.currentState.StartState();
+				}
 			}
 		}
 	}

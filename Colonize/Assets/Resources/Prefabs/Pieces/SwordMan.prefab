@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 50169267754198746}
   - component: {fileID: 114368159096673552}
   - component: {fileID: 114953233826582002}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SwordMan
   m_TagString: Piece
   m_Icon: {fileID: 0}

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Colonize.Unit.Piece {
-    public class StandState : PieceState {
-        internal StandState(PieceStateController _stateController)
-         : base(PieceStateType.Stand, _stateController){
+    public class Stand : PieceAction {
+        internal Stand(PieceStateController _stateController)
+         : base(PieceActionType.Stand, _stateController){
 
         }
 

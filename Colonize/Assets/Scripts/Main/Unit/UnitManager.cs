@@ -46,6 +46,22 @@ namespace Colonize.Unit {
 					select controller;
 		}
 
+		public bool RemoveUnit(TController _controller) {
+			try {
+				unitList.Remove(_controller);
+				Destroy(_controller.gameObject, 10.0f);
+				_controller.gameObject.SetActive(false);
+			} catch(System.ArgumentNullException ex) {
+				throw ex;
+			} catch(System.NullReferenceException ex) {
+				throw ex;
+			} catch(System.Exception ex) {
+				throw ex;
+			}
+
+			return true;
+		}
+
 		public abstract IEnumerable<TController> GetUnits(TType _type);
 	}
 }

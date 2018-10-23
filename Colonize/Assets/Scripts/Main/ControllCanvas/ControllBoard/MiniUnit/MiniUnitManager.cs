@@ -6,13 +6,17 @@ using Colonize.Unit.Piece;
 
 namespace Colonize.ControllUI.ControllBoard.MiniUnit {
 	public class MiniUnitManager : Pattern.Singleton.MonoSingleton<MiniUnitManager> {
-		
 		private Dictionary<BuildingController, MiniBuildingController> miniBuildingDictionary = new Dictionary<BuildingController, MiniBuildingController>();
 		private Dictionary<PieceController, MiniPieceController> miniPieceDictionary = new Dictionary<PieceController, MiniPieceController>();
+
+		private static bool onManager;
+
+		public static bool OnManager { get { return onManager; } }
 		
 		void Awake() {
 			Pattern.Factory.PrefabFactory.Instance.CreatePrefab("MiniUnits", "MiniBuilding", true);
 			Pattern.Factory.PrefabFactory.Instance.CreatePrefab("MiniUnits", "MiniPiece", true);
+			onManager = true;
 		}
 
 		void Start () {
@@ -21,6 +25,10 @@ namespace Colonize.ControllUI.ControllBoard.MiniUnit {
 
 		void Update () {
 
+		}
+
+		void OnDestroy() {
+			onManager = false;
 		}
 
 		public void CreateMiniUnit(BuildingController _buildingController) {

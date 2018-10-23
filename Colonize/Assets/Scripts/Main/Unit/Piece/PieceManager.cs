@@ -31,8 +31,21 @@ namespace Colonize.Unit.Piece {
 			var selectedPieces = GetUnitsGroupByLand(_type);
 			foreach(var piecesInSameLand in selectedPieces) {
 				List<Vector2> path = Map.MapManager.Instance.FindPath(piecesInSameLand.Key, _destLandPos);
+				if(path.Count == 0) {
+					path.Add(Map.MapManager.Instance.GetLandPos(piecesInSameLand.Key.x, piecesInSameLand.Key.y));
+				}
 				foreach(var piece in piecesInSameLand) {
 					piece.SetMoveState(path);
+				}
+			}
+		}
+
+		public void AttackPieces(PieceType _type, Vector2Int _destLandPos) {
+			var selectedPieces = GetUnitsGroupByLand(_type);
+			foreach(var piecesInSameLand in selectedPieces) {
+				List<Vector2> path = Map.MapManager.Instance.FindPath(piecesInSameLand.Key, _destLandPos);
+				foreach(var piece in piecesInSameLand) {
+					piece.SetAttackState(path);
 				}
 			}
 		}
@@ -47,7 +60,10 @@ namespace Colonize.Unit.Piece {
 					node.SelectSingleNode("Name").InnerText,
 					System.Convert.ToInt32(node.SelectSingleNode("Hp").InnerText),
 					System.Convert.ToInt32(node.SelectSingleNode("Attack").InnerText),
-					System.Convert.ToInt32(node.SelectSingleNode("Speed").InnerText));
+					float.Parse(node.SelectSingleNode("Speed").InnerText),
+					float.Parse(node.SelectSingleNode("VisualRange").InnerText),
+					float.Parse(node.SelectSingleNode("AttackRange").InnerText),
+					float.Parse(node.SelectSingleNode("AttackCooltime").InnerText));
 				this.unitInfoDictionary.Add(status.type, status);
 				GameObject piecePrefab = Pattern.Factory.PrefabFactory.Instance.CreatePrefab("Pieces", status.type.ToString(), true);
 				piecePrefab.GetComponent<PieceController>().AddObserver(ControllUI.UnitControll.UnitControllBar.Instance.FindButton(status.type.ToString()));

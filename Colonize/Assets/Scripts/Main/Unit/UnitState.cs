@@ -4,13 +4,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Colonize.Unit {
-	public abstract class UnitState<TType, TController> 
-		where TType : struct, IComparable, IFormattable, IConvertible {
-		public readonly TType type;
+	public abstract class UnitAction<TActionType, TController>
+		where TActionType : struct, IComparable, IFormattable, IConvertible {
 
+		protected TActionType type;
 		protected Coroutine coroutine;
 
-		internal UnitState(TType _type) {
+		public TActionType Type { get { return type; } }
+
+		internal UnitAction(TActionType _type) {
 			this.type = _type;
 		}
 

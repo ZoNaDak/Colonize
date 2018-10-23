@@ -22,9 +22,7 @@ namespace Communicate {
 		}
 
 		void Update () {
-			if(this.joinedRoom && PhotonNetwork.connectionStateDetailed == ClientState.PeerCreated) {
-				PhotonNetwork.ReconnectAndRejoin();
-			}
+			
 		}
 
 		void OnGUI() {

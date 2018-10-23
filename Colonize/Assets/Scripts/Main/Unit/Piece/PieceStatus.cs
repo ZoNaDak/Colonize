@@ -16,16 +16,25 @@ namespace Colonize.Unit.Piece {
 	public struct PieceStatus {
 		public readonly PieceType type;
 		public readonly string name;
-		public readonly int hp;
+		public readonly int maxHp;
+		public int hp;
 		public readonly int attack;
-		public readonly int speed;
+		public readonly float speed;
+		public readonly float visualRange;
+		public readonly float attackRange;
+		public readonly float attackCooltime;
 
-		public PieceStatus(PieceType _type, string _name, int _hp, int _attack, int _speed) {
+		public PieceStatus(PieceType _type, string _name, int _hp, int _attack, float _speed
+			, float _visualRange, float _attackRange, float _attackCooltime) {
 			this.type = _type;
 			this.name = _name;
+			this.maxHp = _hp;
 			this.hp = _hp;
 			this.attack = _attack;
 			this.speed = _speed;
+			this.visualRange = _visualRange;
+			this.attackRange = _attackRange;
+			this.attackCooltime = _attackCooltime;
 		}
 
 		//Serialize Function

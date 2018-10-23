@@ -4,18 +4,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Colonize.Unit.Piece {
-	public enum PieceStateType {
+	public enum PieceActionType {
 		Stand,
 		Move,
 		Attack,
 		End
 	}
 
-	public abstract class PieceState : UnitState<PieceStateType, PieceController> {
+	public abstract class PieceAction : UnitAction<PieceActionType, PieceController> {
+		protected static float checkMovePointDist = 10.0f;
 
 		protected readonly PieceStateController stateController;
 
-		internal PieceState(PieceStateType _type, PieceStateController _stateController)
+		internal PieceAction(PieceActionType _type, PieceStateController _stateController)
 		 : base(_type) {
 			this.stateController = _stateController;
 		}

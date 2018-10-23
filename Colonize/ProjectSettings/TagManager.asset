@@ -17,7 +17,7 @@ TagManager:
   - 
   - 
   - Land
-  - Piece
+  - Unit
   - 
   - 
   - 
@@ -47,7 +47,7 @@ TagManager:
   - name: Land
     uniqueID: 2489492425
     locked: 0
-  - name: Piece
+  - name: Unit
     uniqueID: 3707424865
     locked: 0
   - name: UI

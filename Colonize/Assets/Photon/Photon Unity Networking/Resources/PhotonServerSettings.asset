@@ -38,4 +38,5 @@ MonoBehaviour:
   - RequestForPickupTimes
   - SetData
   - SetDataOnPhoton
+  - DamagedOnPhoton
   DisableAutoOpenWizard: 1
