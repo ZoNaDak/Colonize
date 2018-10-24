@@ -4,17 +4,22 @@ using UnityEngine;
 using Photon;
 
 namespace Communicate {
-	public class CommunicateManager : Photon.MonoBehaviour {
+	public class CommunicateManager : Pattern.Singleton.PhotonMonoSingleton<CommunicateManager> {
 		private int playerID;
 		private bool joinedRoom;
+		private bool gameWin;
+		private bool gameResult;
 
 		public int PlayerId { get { return playerID; } }
 		public bool JoinedRoom { get { return joinedRoom; } set { joinedRoom = value; } }
+		public bool GameWin { get { return gameWin; } set { gameWin = value; } }
+		public bool GameResult { get { return gameResult; } set { gameResult = value; } }
 
 		void Awake() {
 			PhotonNetwork.ConnectUsingSettings("0.1");
 			PhotonNetwork.autoJoinLobby = false;
 			PhotonNetwork.automaticallySyncScene = true;
+			PhotonNetwork.autoCleanUpPlayerObjects = true;
 		}
 
 		void Start () {
@@ -27,8 +32,6 @@ namespace Communicate {
 
 		void OnGUI() {
 			#if UNITY_EDITOR
-				GUILayout.Label(PhotonNetwork.connectionStateDetailed.ToString());
-			#else
 				GUILayout.Label(PhotonNetwork.connectionStateDetailed.ToString());
 			#endif
 		}
@@ -55,6 +58,11 @@ namespace Communicate {
 			} else {
 				JoinRoom(_roomName);
 			}
+		}
+
+		public void LeaveRoom() {
+			PhotonNetwork.LeaveRoom();
+			PhotonNetwork.LeaveLobby();
 		}
 
 		public RoomInfo[] GetRooms() {

@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using ExitGames.Client.Photon;
 
 namespace Colonize.DefaultManager {
 	public class GameController : Pattern.Singleton.MonoSingleton<GameController> {
 		private bool ready;
+		private bool gameStart;
 		private int playerID;
 		private int playerNum;
 		private Communicate.CommunicateManager communicator;
@@ -27,9 +29,10 @@ namespace Colonize.DefaultManager {
 			//Screen.SetResolution(720, 1280, false);
 			Screen.SetResolution(360, 640, false);
 			
-			communicator = GameObject.FindGameObjectWithTag("Communicator").GetComponentInChildren<Communicate.CommunicateManager>();
+			communicator = Communicate.CommunicateManager.Instance;
 
 			PhotonNetwork.isMessageQueueRunning = true;
+			gameStart = false;
 
 			//Setting Serialization Of CustomType
 			PhotonPeer.RegisterType(typeof(Unit.Building.BuildingStatus), (byte)100, Unit.Building.BuildingStatus.Serialize, Unit.Building.BuildingStatus.Deserialize);
@@ -43,7 +46,15 @@ namespace Colonize.DefaultManager {
 
 		// Update is called once per frame
 		void Update () {
-
+			if(this.gameStart) {
+				if(this.buildingManager.UnitList.Count == 0) {
+					this.communicator.GameWin = false;
+					StartCoroutine(LoadTitleScene());
+				} else if (!this.communicator.CheckPlayer()) {
+					this.communicator.GameWin = true;
+					StartCoroutine(LoadTitleScene());
+				}
+			} 
 		}
 
 		private IEnumerator Initialize() {
@@ -70,6 +81,19 @@ namespace Colonize.DefaultManager {
 			}
 			this.mainCamera.SetPos(landPos);
 			this.buildingManager.CreateUnit(Unit.Building.BuildingType.Commander, landPos);
+
+			this.gameStart = true;
+		}
+
+		//Coroutine
+		IEnumerator LoadTitleScene() {
+			this.communicator.GameResult = true;
+			this.communicator.LeaveRoom();
+			PhotonNetwork.isMessageQueueRunning = false;
+			Pattern.Factory.PrefabFactory.Instance.AllClearDictionary();
+			SceneManager.LoadScene("Title");
+ 			
+ 			yield return null;
 		}
 	}
 }

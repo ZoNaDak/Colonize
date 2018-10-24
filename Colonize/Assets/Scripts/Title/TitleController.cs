@@ -1,10 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 namespace Colonize.Title {
 	public class TitleController : MonoBehaviour {
+
+		[SerializeField] private Canvas titleCanvas;
+		[SerializeField] private Canvas resultCanvas;
+		[SerializeField] private Text resultText;
 
 		void Awake() {
 			#if !UNITY_EDITOR
@@ -17,7 +22,19 @@ namespace Colonize.Title {
 		}
 
 		void Start () {
+			if(Communicate.CommunicateManager.Instance.GameResult) {
+				Communicate.CommunicateManager.Instance.GameResult = false;
+				this.titleCanvas.gameObject.SetActive(false);
+				this.resultCanvas.gameObject.SetActive(true);
+				if(Communicate.CommunicateManager.Instance.GameWin) {
+					this.resultText.text = "Win";
+				} else {
+					this.resultText.text = "Lose";
+				}
+			} else {
 
+			}
+			PhotonNetwork.isMessageQueueRunning = true;
 		}
 
 		void Update () {
@@ -26,7 +43,6 @@ namespace Colonize.Title {
 
 		public void OnStartButtonClicked() {
 			SceneManager.LoadScene("Join");
-			//DontDestroyOnLoad(StaticData.Instance);
 		}
 
 		public void OnQuitButtonClicked() {
@@ -35,6 +51,11 @@ namespace Colonize.Title {
 			#else 
 			Application.Quit();
 			#endif
+		}
+
+		public void OnToTitleButtonClicked() {
+			this.titleCanvas.gameObject.SetActive(true);
+			this.resultCanvas.gameObject.SetActive(false);
 		}
 	}
 }

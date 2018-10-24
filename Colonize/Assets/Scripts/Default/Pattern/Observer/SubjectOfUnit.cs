@@ -16,6 +16,9 @@ namespace Pattern.Observer {
 		public void RemoveObserver(IObserverOfUnit<T> _observer) {
 			observerList.Remove(_observer);
 		}
+
+		public void ClearObservers() {
+			observerList.Clear();
+		}
 	}
 }
-

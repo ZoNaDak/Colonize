@@ -48,7 +48,8 @@ namespace Colonize.Unit.Piece {
 
 		//override
 		public override void OnDestroy() {
-			
+			this.ClearObservers();
+			unitNum = 0;
 		}
 
 		public override int Damaged(int _damage) {

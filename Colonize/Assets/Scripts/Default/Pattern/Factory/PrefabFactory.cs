@@ -9,7 +9,8 @@ namespace Pattern.Factory {
 
 		public GameObject CreatePrefab(string _category, string _prefabName, bool _save) {
 			if(this.prefabDictionary.ContainsKey(_prefabName)) {
-				throw new System.ArgumentException("Already Saved Prefab");
+				Debug.Log("Already Saved Prefab");
+				return prefabDictionary[_prefabName];
 			}
 
 			GameObject prefab = Resources.Load(System.IO.Path.Combine("Prefabs", _category, _prefabName)) as GameObject;
@@ -29,6 +30,10 @@ namespace Pattern.Factory {
 				throw new System.ArgumentOutOfRangeException("Can't Find Prefab");
 			}
 			return this.prefabDictionary[_prefabName];
+		}
+
+		public void AllClearDictionary() {
+			prefabDictionary.Clear();
 		}
 	}
 }

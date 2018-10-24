@@ -10,8 +10,8 @@ namespace Colonize.Join {
 		private List<Room.RoomController> roomList = new List<Room.RoomController>();
 		private int waitTextPeriodNum;
 		private Coroutine wait;
+		private Communicate.CommunicateManager communicator;
 
-		[SerializeField] private Communicate.CommunicateManager communicator;
 		[SerializeField] private GameObject rooms;
 		[SerializeField] private GameObject roomPrefab;
 		[SerializeField] private GameObject refreshButton;
@@ -21,6 +21,7 @@ namespace Colonize.Join {
 		void Awake() {
 			Screen.SetResolution(360, 640, false);
 
+			this.communicator = Communicate.CommunicateManager.Instance;
 			DontDestroyOnLoad(this.communicator.gameObject);
 		}
 
@@ -46,6 +47,7 @@ namespace Colonize.Join {
 		private IEnumerator OnWait() {
 			while(true) {
 				if(communicator.CheckPlayer()) {
+					PhotonNetwork.room.IsVisible = false;
 					communicator.JoinedRoom = true;
 					StartCoroutine(LoadMainScene());
 				}
@@ -107,7 +109,7 @@ namespace Colonize.Join {
 			PhotonNetwork.isMessageQueueRunning = false;
 
 			AsyncOperation ao = PhotonNetwork.LoadLevelAsync("Main");
- 			//AsyncOperation ao = SceneManager.LoadSceneAsync("Main");
+ 			
  			yield return ao;
 		}
 	}
