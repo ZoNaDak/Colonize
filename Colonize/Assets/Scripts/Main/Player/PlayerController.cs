@@ -8,18 +8,32 @@ using Pattern.Factory;
 
 namespace Colonize.Player {
 	public class PlayerController : MonoBehaviour {
+		private static string goldTextFormat = "Gold : {0}";
+
 		private BuildingManager buildingManager;
 		private PieceManager pieceManager;
-		private int money;
+		private int gold;
 		private int playerID;
+
+		public UnityEngine.UI.Text goldText { get; set; }
 
 		public int PlayerId { get { return playerID; }}
 		public BuildingManager BuildingManager { get { return buildingManager; } }
 		public PieceManager PieceManager { get { return pieceManager; } }
 
+		public int Gold {
+			get { return this.gold; }
+			set {
+				this.gold = value;
+				goldText.text = string.Format(goldTextFormat, this.gold.ToString());
+			}
+		}
+
 		// Use this for initialization
 		void Start () {
-
+			if(this.playerID == DefaultManager.GameController.Instance.PlayerId) {
+				this.Gold = 0;
+			}
 		}
 
 		// Update is called once per frame

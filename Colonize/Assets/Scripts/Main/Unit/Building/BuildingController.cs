@@ -7,6 +7,7 @@ namespace Colonize.Unit.Building {
 	public sealed class BuildingController : UnitController<BuildingController, BuildingStatus, BuildingType> {
 		
 		private static List<Vector2> producePosList = new List<Vector2>(16);
+		private static float harvestTime = 10.0f;
 
 		private int producePosIdx;
 		private Building.BuildingManager buildingManager;
@@ -21,6 +22,7 @@ namespace Colonize.Unit.Building {
 		void Start () {
 			if(this.photonView.isMine) {
 				StartCoroutine(CreatingUnit());
+				StartCoroutine(HarvestingGold());
 			}
 		}
 
@@ -88,6 +90,15 @@ namespace Colonize.Unit.Building {
 					producePosIdx = 0;
 				}
 				pieceManager.CreateUnit(Piece.PieceType.SwordMan, producePos);
+			}
+		}
+
+		private IEnumerator HarvestingGold() {
+			yield return new WaitUntil(() => PhotonNetwork.connectionStateDetailed == ClientState.Joined);
+			
+			while(true) {
+				yield return new WaitForSecondsRealtime(harvestTime);
+				this.buildingManager.Player.Gold += this.status.harvestGold;
 			}
 		}
 

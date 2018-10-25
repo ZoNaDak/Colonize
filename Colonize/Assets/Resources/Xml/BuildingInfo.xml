@@ -4,6 +4,7 @@
         <Id>0</Id>
         <Name>Commander</Name>
         <Hp>100</Hp>
-        <Produce>5.0</Produce>
+        <ProduceTime>5.0</ProduceTime>
+        <HarvestGold>20</HarvestGold>
     </Building>
 </BuildingInfo>

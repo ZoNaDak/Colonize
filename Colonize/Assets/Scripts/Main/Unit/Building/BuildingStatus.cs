@@ -19,13 +19,15 @@ namespace Colonize.Unit.Building {
 		public readonly int maxhp;
 		public int hp;
 		public readonly float produceCompleteTime;
+		public readonly int harvestGold;
 
-		public BuildingStatus(BuildingType _type, string _name, int _hp, float _produceTime) {
+		public BuildingStatus(BuildingType _type, string _name, int _hp, float _produceTime, int _harvestGold) {
 			this.type = _type;
 			this.name = _name;
 			this.maxhp = _hp;
 			this.hp = _hp;
 			this.produceCompleteTime = _produceTime;
+			this.harvestGold = _harvestGold;
 		}
 
 		//Serialize Function

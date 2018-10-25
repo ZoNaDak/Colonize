@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using ExitGames.Client.Photon;
 using Pattern.Factory;
 using Colonize.Player;
@@ -17,6 +18,7 @@ namespace Colonize.DefaultManager {
 		private PlayerController myPlayer;
 
 		[SerializeField] private MyCamera.MainCameraController mainCamera;
+		[SerializeField] private Text goldText;
 
 		public bool Ready { get { return ready; } }
 		public int PlayerId { get { return playerID; } }
@@ -73,6 +75,7 @@ namespace Colonize.DefaultManager {
 				playerList.Add(player);
 			}
 			this.myPlayer = this.playerList[this.playerID];
+			this.myPlayer.goldText = this.goldText;
 
 			this.ready = true;
 

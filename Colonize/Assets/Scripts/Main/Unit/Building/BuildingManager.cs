@@ -8,6 +8,8 @@ namespace Colonize.Unit.Building {
 	public sealed class BuildingManager : UnitManager<BuildingManager, BuildingController, BuildingStatus, BuildingType> {
 		private Player.PlayerController player;
 
+		internal Player.PlayerController Player { get { return player; } }
+
 		void Awake () {
 			
 		}
@@ -28,7 +30,8 @@ namespace Colonize.Unit.Building {
 					(BuildingType)(System.Convert.ToInt32(node.SelectSingleNode("Id").InnerText)),
 					node.SelectSingleNode("Name").InnerText,
 					System.Convert.ToInt32(node.SelectSingleNode("Hp").InnerText),
-					float.Parse(node.SelectSingleNode("Produce").InnerText));
+					float.Parse(node.SelectSingleNode("ProduceTime").InnerText),
+					System.Convert.ToInt32(node.SelectSingleNode("HarvestGold").InnerText));
 				this.unitInfoDictionary.Add(status.type, status);
 				Pattern.Factory.PrefabFactory.Instance.CreatePrefab("Buildings", status.type.ToString(), true);
 			}
