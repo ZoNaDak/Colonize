@@ -10,19 +10,16 @@ namespace Colonize.ControllUI.ControllBoard {
 		private Vector2 blockSize = new Vector2();
 		private float clickedTime;
 		private bool drag = false;
+		private Unit.Piece.PieceManager pieceManager;
 		private Unit.Piece.PieceType selectedPieceType;
-
+		
 		private System.Action OnClick;
 
 		[SerializeField] private YellowRect yellowRect;
 		[SerializeField] private MyCamera.MainCameraController mainCamera;
-		[SerializeField] private Unit.Piece.PieceManager pieceManager;
 
 		void Start () {
-			this.rectTransform = (this.transform as RectTransform);
-			blockSize.x = rectTransform.sizeDelta.x / Map.MapManager.Instance.LandNumX;
-			blockSize.y = rectTransform.sizeDelta.y / Map.MapManager.Instance.LandNumY;
-			this.yellowRect.LandSize = Map.MapManager.Instance.GetLandSize();
+			StartCoroutine(Initialize());
 		}
 
 		void Update () {
@@ -30,6 +27,15 @@ namespace Colonize.ControllUI.ControllBoard {
 			if(drag) {
 				clickedTime += Time.deltaTime;
 			}
+		}
+
+		private IEnumerator Initialize() {
+			yield return new WaitUntil(() => DefaultManager.GameController.Instance.Ready);
+			pieceManager = DefaultManager.GameController.Instance.MyPlayer.PieceManager;
+			this.rectTransform = (this.transform as RectTransform);
+			blockSize.x = rectTransform.sizeDelta.x / Map.MapManager.Instance.LandNumX;
+			blockSize.y = rectTransform.sizeDelta.y / Map.MapManager.Instance.LandNumY;
+			this.yellowRect.LandSize = Map.MapManager.Instance.GetLandSize();
 		}
 
 		private Vector2 GetLandPosForClickBoard() {

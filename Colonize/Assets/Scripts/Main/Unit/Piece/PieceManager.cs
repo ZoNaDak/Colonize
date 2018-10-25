@@ -6,16 +6,15 @@ using UnityEngine;
 
 namespace Colonize.Unit.Piece {
 	public sealed class PieceManager : UnitManager<PieceManager, PieceController, PieceStatus, PieceType> {
-		
-		[SerializeField] private DefaultManager.GameController gameController;
+		private Player.PlayerController player;
 
 		void Awake() {
-			PieceController.SetPieceManager(this);
-			Building.BuildingController.SetPieceManager(this);
+			
 		}
 
 		void Start () {
-			StartCoroutine(StartManager("PieceInfo", "Piece"));
+			this.player = this.transform.parent.GetComponentInChildren<Player.PlayerController>();
+			StartCoroutine(StartManager(this.player.PlayerId, "PieceInfo", "Piece"));
 		}
 
 		void Update () {
@@ -51,9 +50,7 @@ namespace Colonize.Unit.Piece {
 		}
 
 		//overide
-		protected override IEnumerator SaveUnitInfoWithCoroutine (XmlNodeList _xmlNodes, string _xmlName) {
-			yield return ControllUI.UnitControll.UnitControllBar.Instance.WaitForReady();
-
+		protected override void SaveUnitInfoWithCoroutine (XmlNodeList _xmlNodes, string _xmlName) {
 			foreach(XmlNode node in _xmlNodes) {
 				PieceStatus status =  new PieceStatus(
 					(PieceType)(System.Convert.ToInt32(node.SelectSingleNode("Id").InnerText)),
@@ -70,8 +67,6 @@ namespace Colonize.Unit.Piece {
 			}
 
 			MyXml.XmlManager.ClearXmlDoc(_xmlName);
-
-			yield return true;
 		}
 
 		public override void CreateUnit(PieceType _type, Vector2 _pos) {
@@ -81,7 +76,7 @@ namespace Colonize.Unit.Piece {
 					, new Vector3(_pos.x, _pos.y, piecePrefab.transform.position.z)
 					, Quaternion.identity, 0).GetComponent<PieceController>();
 				piece.transform.SetParent(this.transform);
-				PieceStatus status = this.unitInfoDictionary[_type];
+				piece.SetPieceManager(this);
 				piece.SetData(this.playerId, _type);
 				this.unitList.Add(piece);
 			} catch(System.NullReferenceException ex) {

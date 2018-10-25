@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using ExitGames.Client.Photon;
+using Pattern.Factory;
+using Colonize.Player;
 
 namespace Colonize.DefaultManager {
 	public class GameController : Pattern.Singleton.MonoSingleton<GameController> {
@@ -11,14 +13,15 @@ namespace Colonize.DefaultManager {
 		private int playerID;
 		private int playerNum;
 		private Communicate.CommunicateManager communicator;
+		private List<PlayerController> playerList = new List<PlayerController>();
+		private PlayerController myPlayer;
 
-		[SerializeField] private Unit.Building.BuildingManager buildingManager;
-		[SerializeField] private Unit.Piece.PieceManager pieceManager;
 		[SerializeField] private MyCamera.MainCameraController mainCamera;
 
 		public bool Ready { get { return ready; } }
 		public int PlayerId { get { return playerID; } }
 		public int PlayerNum { get { return playerNum; } }
+		public PlayerController MyPlayer { get { return myPlayer; } }
 
 		void Awake() {
 			#if !UNITY_EDITOR
@@ -47,7 +50,7 @@ namespace Colonize.DefaultManager {
 		// Update is called once per frame
 		void Update () {
 			if(this.gameStart) {
-				if(this.buildingManager.UnitList.Count == 0) {
+				if(this.myPlayer.CheckLose()) {
 					this.communicator.GameWin = false;
 					StartCoroutine(LoadTitleScene());
 				} else if (!this.communicator.CheckPlayer()) {
@@ -61,6 +64,16 @@ namespace Colonize.DefaultManager {
 			yield return new WaitUntil(() => PhotonNetwork.connectionStateDetailed == ClientState.Joined);
 			this.playerID = communicator.PlayerId;
 			this.playerNum = 2;
+			
+			//CreatePlayer
+			for(int i = 0; i < playerNum; ++i) {
+				GameObject playerPrefab = PrefabFactory.Instance.CreatePrefab("Player", "Player", false);
+				PlayerController player = Instantiate(playerPrefab, this.transform.position, Quaternion.identity).GetComponentInChildren<PlayerController>();
+				player.Intialize(i);
+				playerList.Add(player);
+			}
+			this.myPlayer = this.playerList[this.playerID];
+
 			this.ready = true;
 
 			yield return new WaitForSecondsRealtime(3.0f);
@@ -80,9 +93,13 @@ namespace Colonize.DefaultManager {
 					throw new System.ArgumentException("Player Number is Not Correct!");
 			}
 			this.mainCamera.SetPos(landPos);
-			this.buildingManager.CreateUnit(Unit.Building.BuildingType.Commander, landPos);
+			this.myPlayer.CreateForGameStart(landPos);
 
 			this.gameStart = true;
+		}
+
+		public PlayerController GetPlayer(int _playerId) {
+			return playerList[_playerId];
 		}
 
 		//Coroutine

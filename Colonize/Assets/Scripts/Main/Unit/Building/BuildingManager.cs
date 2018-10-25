@@ -6,22 +6,23 @@ using UnityEngine;
 
 namespace Colonize.Unit.Building {
 	public sealed class BuildingManager : UnitManager<BuildingManager, BuildingController, BuildingStatus, BuildingType> {
-
-		[SerializeField] private DefaultManager.GameController gameController;
+		private Player.PlayerController player;
 
 		void Awake () {
-			BuildingController.SetBuildingManager(this);
+			
 		}
 
 		void Start () {
-			StartCoroutine(StartManager("BuildingInfo", "Building"));
+			this.player = this.transform.parent.GetComponentInChildren<Player.PlayerController>();
+			StartCoroutine(StartManager(this.player.PlayerId, "BuildingInfo", "Building"));
 		}
 
 		void Update () {
 
 		}
 
-		protected override IEnumerator SaveUnitInfoWithCoroutine (XmlNodeList _xmlNodes, string _xmlName) {
+		//overide
+		protected override void SaveUnitInfoWithCoroutine (XmlNodeList _xmlNodes, string _xmlName) {
 			foreach(XmlNode node in _xmlNodes) {
 				BuildingStatus status =  new BuildingStatus(
 					(BuildingType)(System.Convert.ToInt32(node.SelectSingleNode("Id").InnerText)),
@@ -31,10 +32,7 @@ namespace Colonize.Unit.Building {
 				this.unitInfoDictionary.Add(status.type, status);
 				Pattern.Factory.PrefabFactory.Instance.CreatePrefab("Buildings", status.type.ToString(), true);
 			}
-
 			MyXml.XmlManager.ClearXmlDoc(_xmlName);
-
-			yield return null;
 		}
 
 		public override void CreateUnit(BuildingType _type, Vector2 _pos) {
@@ -44,7 +42,8 @@ namespace Colonize.Unit.Building {
 				, new Vector3(_pos.x, _pos.y, buildingPrefab.transform.position.z)
 				, Quaternion.identity, 0).GetComponent<BuildingController>();
 				building.transform.SetParent(this.transform);
-				BuildingStatus status = this.unitInfoDictionary[_type];
+				building.SetBuildingManager(this);
+				building.SetPieceManager(this.player.PieceManager);
 				building.SetData(this.playerId, _type);
 				this.unitList.Add(building);
 			} catch(System.NullReferenceException ex) {

@@ -23,27 +23,34 @@ namespace Colonize.Unit {
 		public List<TController> UnitList { get { return unitList; } }
 		public int PlayerId { get { return playerId; } }
 
-		protected abstract IEnumerator SaveUnitInfoWithCoroutine(XmlNodeList _xmlNodes, string _xmlName);
-		public abstract void CreateUnit(TType _type, Vector2 _pos);
-
-		protected IEnumerator StartManager(string _xmlHeadName, string _xmlNodeName) {
+		protected IEnumerator StartManager(int _playerId, string _xmlHeadName, string _xmlNodeName) {
 			yield return new WaitUntil(() => { return DefaultManager.GameController.Instance.Ready; });
-			this.playerId = DefaultManager.GameController.Instance.PlayerId;
+			this.playerId = _playerId;
+			yield return ControllUI.UnitControll.UnitControllBar.Instance.WaitForReady();
+			
 			try {
 				XmlNodeList xmlNodes = MyXml.XmlManager.LoadXmlNodes(_xmlHeadName, _xmlNodeName);
-				StartCoroutine(SaveUnitInfoWithCoroutine(xmlNodes, _xmlHeadName));
+				SaveUnitInfoWithCoroutine(xmlNodes, _xmlHeadName);
 				this.unitSpriteNames.Add("BP_{0}");
 				this.unitSpriteNames.Add("WP_{0}");
 			} catch (System.NullReferenceException ex) {
 				throw ex;
 			} catch (System.Exception ex) {
 				throw ex;
-			}
+			}					
 		}
 
 		public IEnumerable<TController> GetAllUnits() {
 			return from controller in this.unitList
 					select controller;
+		}
+
+		public void AddUnit(TController _controller) {
+			if(_controller != null) {
+				this.unitList.Add(_controller);
+			} else {
+				throw new System.ArgumentNullException("UnitController is null!");
+			}
 		}
 
 		public bool RemoveUnit(TController _controller) {
@@ -62,6 +69,9 @@ namespace Colonize.Unit {
 			return true;
 		}
 
+		//abstract
+		public abstract void CreateUnit(TType _type, Vector2 _pos);
 		public abstract IEnumerable<TController> GetUnits(TType _type);
+		protected abstract void SaveUnitInfoWithCoroutine(XmlNodeList _xmlNodes, string _xmlName);
 	}
 }

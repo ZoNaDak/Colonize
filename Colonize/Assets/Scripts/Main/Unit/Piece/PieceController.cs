@@ -7,7 +7,7 @@ namespace Colonize.Unit.Piece {
 	public sealed class PieceController : UnitController<PieceController, PieceStatus, PieceType> {		
 		private PieceStateController stateController;
 
-		static private Piece.PieceManager pieceManager;
+		private Piece.PieceManager pieceManager;
 
 		void Awake() {
 			stateController = new PieceStateController(this);
@@ -32,7 +32,7 @@ namespace Colonize.Unit.Piece {
 			Gizmos.DrawWireSphere(this.transform.position, this.status.visualRange);
 		}
 
-		internal static void SetPieceManager(Piece.PieceManager _pieceManager) {
+		internal void SetPieceManager(Piece.PieceManager _pieceManager) {
 			pieceManager = _pieceManager;
 		}
 
@@ -73,7 +73,12 @@ namespace Colonize.Unit.Piece {
 		[PunRPC]
 		protected override void SetDataOnPhoton(int _playerId, PieceType _type){
 			this.playerId = _playerId;
-			this.status = pieceManager.UnitInfoDictionary[_type];
+			if(_playerId != DefaultManager.GameController.Instance.PlayerId) {
+				this.pieceManager = DefaultManager.GameController.Instance.GetPlayer(this.playerId).PieceManager;
+				this.pieceManager.AddUnit(this);
+				this.transform.parent = this.pieceManager.transform;
+			}
+			this.status = this.pieceManager.UnitInfoDictionary[_type];
 			this.spriteRenderer.sprite = Pattern.Factory.SpriteFactory.Instance.GetSprite("PiecesAtlas", string.Format(pieceManager.UnitSpriteNames[this.playerId], this.status.name));
 			MiniUnitManager.Instance.CreateMiniUnit(this);
 		}

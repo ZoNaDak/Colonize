@@ -4,9 +4,24 @@ using UnityEngine;
 
 namespace Colonize.Unit.Piece {
     public class Attack : PieceAction {
+        private PieceController controller;
+
+        private static int checkableLayerMask = ~((1 << LayerMask.NameToLayer("Building")) | (1 << LayerMask.NameToLayer("Piece")));
+
         internal Attack(PieceStateController _stateController)
          : base(PieceActionType.Attack, _stateController){
+            this.controller = _stateController.Controller;
+        }
 
+        private bool Attackable() {
+            Collider2D[] inAttackRange = Physics2D.OverlapCircleAll(this.controller.transform.position, this.controller.Status.attackRange, checkableLayerMask);
+            for(int i = 0; i < inAttackRange.Length; ++i) {
+                if(inAttackRange[i].gameObject == this.stateController.TargetUnit.GetGameObject()) {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         internal IEnumerator AttackCoroutine() {
@@ -19,27 +34,28 @@ namespace Colonize.Unit.Piece {
                     }
                     break;
                 }
-                Vector2 moveDir = this.stateController.TargetUnit.GetPos() - (Vector2)this.stateController.Controller.transform.position;
-                if(moveDir.magnitude <= this.stateController.Controller.Status.attackRange) {
-                    this.stateController.TargetUnit.Damaged(this.stateController.Controller.Status.attack);
-                    yield return new WaitForSecondsRealtime(this.stateController.Controller.Status.attackCooltime);
+                
+                if(this.Attackable()) {
+                    this.stateController.TargetUnit.Damaged(this.controller.Status.attack);
+                    yield return new WaitForSecondsRealtime(this.controller.Status.attackCooltime);
                 } else {
-                    this.stateController.Controller.transform.Translate(moveDir.normalized * this.stateController.Controller.Status.speed);
+                    Vector2 moveDir = this.stateController.TargetUnit.GetPos() - (Vector2)this.controller.transform.position;
+                    this.controller.transform.Translate(moveDir.normalized * this.controller.Status.speed);
                     yield return new WaitForSecondsRealtime(0.01f);
                 }
             }
         }  
 
         internal override void StartState() {
-            if(!this.stateController.Controller.photonView.isMine) {
+            if(!this.controller.photonView.isMine) {
                 return;
             }
-            this.coroutine = this.stateController.Controller.StartCoroutine(AttackCoroutine());
+            this.coroutine = this.controller.StartCoroutine(AttackCoroutine());
         }
 
         internal override void StopState() {
             if(this.coroutine != null) {
-                this.stateController.Controller.StopCoroutine(this.coroutine);
+                this.controller.StopCoroutine(this.coroutine);
             }
         }
     }

@@ -39,18 +39,12 @@ namespace Colonize.Unit.Piece {
 
 		}
 
-		public void SetMovePosList(List<Vector2> _movePosList) {
-			try {
-				if(_movePosList == null) {
-					throw new System.ArgumentNullException("MovePosList is Null");
-				}
-				this.movePosList = _movePosList;
-				this.currentMovePosIdx = 0;
-			} catch (System.ArgumentNullException ex) {
-				throw ex;
-			} catch (System.Exception ex) {
-				throw ex;
+		private void ChangeAction(PieceActionType _type) {
+			if(this.currentState != null) {
+				this.currentState.StopState();
 			}
+			this.currentState = this.stateList[(int)_type];
+			this.currentState.StartState();
 		}
 
 		internal void SetCurrentMovePosToNext() {
@@ -79,6 +73,20 @@ namespace Colonize.Unit.Piece {
 			return check;
 		}
 
+		public void SetMovePosList(List<Vector2> _movePosList) {
+			try {
+				if(_movePosList == null) {
+					throw new System.ArgumentNullException("MovePosList is Null");
+				}
+				this.movePosList = _movePosList;
+				this.currentMovePosIdx = 0;
+			} catch (System.ArgumentNullException ex) {
+				throw ex;
+			} catch (System.Exception ex) {
+				throw ex;
+			}
+		}
+
 		//override
 		internal override void InitState() {
 			for(int i = 0; i < (int)PieceActionType.End; ++i) {
@@ -100,28 +108,22 @@ namespace Colonize.Unit.Piece {
 						throw new System.NotImplementedException("Not Impelement InitStateType In Switch Sentence");
 				}
 			}
-			this.currentState = this.stateList[(int)PieceStateType.Stand];
+			ChangeState(PieceStateType.Stand);
 		}
 
 		internal override void ChangeState(PieceStateType _type) {
 			switch(_type) {
 				case PieceStateType.Stand:
-					this.currentState.StopState();
 					this.isAttackalbe = true;
-					this.currentState = this.stateList[(int)PieceActionType.Stand];
-					this.currentState.StartState();
+					ChangeAction(PieceActionType.Stand);
 				break;
 				case PieceStateType.Move:
-					this.currentState.StopState();
 					this.isAttackalbe = false;
-					this.currentState = this.stateList[(int)PieceActionType.Move];
-					this.currentState.StartState();
+					ChangeAction(PieceActionType.Move);
 				break;
 				case PieceStateType.Attack:
-					this.currentState.StopState();
 					this.isAttackalbe = true;
-					this.currentState = this.stateList[(int)PieceActionType.Move];
-					this.currentState.StartState();
+					ChangeAction(PieceActionType.Move);
 				break;
 				default:
 					throw new System.ArgumentException("PieceStateType is Not Correctable! : " + _type);
@@ -132,9 +134,7 @@ namespace Colonize.Unit.Piece {
 		internal override void Update() {
 			if(this.isAttackalbe) {
 				if(this.currentState.Type != PieceActionType.Attack && CheckIsEnemyAroundHere()){
-					this.currentState.StopState();
-					this.currentState = this.stateList[(int)PieceActionType.Attack];
-					this.currentState.StartState();
+					ChangeAction(PieceActionType.Attack);
 				}
 			}
 		}

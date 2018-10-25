@@ -9,9 +9,8 @@ namespace Colonize.Unit.Building {
 		private static List<Vector2> producePosList = new List<Vector2>(16);
 
 		private int producePosIdx;
-
-		static private Building.BuildingManager buildingManager;
-		static private Piece.PieceManager pieceManager;
+		private Building.BuildingManager buildingManager;
+		private Piece.PieceManager pieceManager;
 
 		void Awake() {
 			if(producePosList.Count == 0) {
@@ -52,12 +51,12 @@ namespace Colonize.Unit.Building {
 			producePosList.Add(new Vector2(-64.0f, -64.0f));
 		}
 
-		internal static void SetBuildingManager(BuildingManager _buildingManager) {
-			buildingManager = _buildingManager;
+		internal void SetBuildingManager(BuildingManager _buildingManager) {
+			this.buildingManager = _buildingManager;
 		}
 
-		internal static void SetPieceManager(Piece.PieceManager _pieceManager) {
-			pieceManager = _pieceManager;
+		internal void SetPieceManager(Piece.PieceManager _pieceManager) {
+			this.pieceManager = _pieceManager;
 		}
 
 		//override
@@ -100,7 +99,13 @@ namespace Colonize.Unit.Building {
 		[PunRPC]
 		protected override void SetDataOnPhoton(int _playerId, BuildingType _type) {
 			this.playerId = _playerId;
-			this.status = buildingManager.UnitInfoDictionary[_type];
+			if(_playerId != DefaultManager.GameController.Instance.PlayerId) {
+				this.buildingManager = DefaultManager.GameController.Instance.GetPlayer(this.playerId).BuildingManager;
+				this.pieceManager = DefaultManager.GameController.Instance.GetPlayer(this.playerId).PieceManager;
+				this.buildingManager.AddUnit(this);
+				this.transform.parent = this.buildingManager.transform;
+			}
+			this.status = this.buildingManager.UnitInfoDictionary[_type];
 			this.spriteRenderer.sprite = Pattern.Factory.SpriteFactory.Instance.GetSprite("PiecesAtlas", string.Format(buildingManager.UnitSpriteNames[this.playerId], this.status.name));
 			MiniUnitManager.Instance.CreateMiniUnit(this);
 		}
