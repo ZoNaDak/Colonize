@@ -5,13 +5,12 @@ using Colonize.ControllUI.ControllBoard.MiniUnit;
 
 namespace Colonize.Unit.Piece {
 	public sealed class PieceController : UnitController<PieceController, PieceStatus, PieceType> {		
-		private PieceStateController stateController;
-
 		private Piece.PieceManager pieceManager;
 
+		[SerializeField] private PieceStateController stateController;
+
 		void Awake() {
-			stateController = new PieceStateController(this);
-			stateController.InitState();
+			this.stateController.InitState(this);
 			if(!this.photonView.isMine) {
 				this.GetComponent<Rigidbody2D>().isKinematic = true;
 			}
@@ -22,9 +21,7 @@ namespace Colonize.Unit.Piece {
 		}
 
 		void Update() {
-			if(this.photonView.isMine) {
-				this.stateController.Update();
-			}
+			
 		}
 
 		void OnDrawGizmosSelected() {

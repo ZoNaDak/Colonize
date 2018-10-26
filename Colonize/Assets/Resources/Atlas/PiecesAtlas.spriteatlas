@@ -44,16 +44,22 @@ SpriteAtlas:
     - {fileID: 2800000, guid: 2904699f29c2295449e91a999e96012a, type: 3}
     - {fileID: 2800000, guid: 799e680d274fa6547b6c52c236aca7ca, type: 3}
     - {fileID: 2800000, guid: 53ca8556634e6354287efbfa09d1a27f, type: 3}
+    - {fileID: 2800000, guid: 1872e321a109bd74480ddb611cbb50b6, type: 3}
+    - {fileID: 2800000, guid: 1596d8a64e9dded42b920017c540443b, type: 3}
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
+  - {fileID: 21300000, guid: 1872e321a109bd74480ddb611cbb50b6, type: 3}
   - {fileID: 21300000, guid: 48f57d62ff50e5e43b85fabe0d98624f, type: 3}
   - {fileID: 21300000, guid: 53ca8556634e6354287efbfa09d1a27f, type: 3}
+  - {fileID: 21300000, guid: 1596d8a64e9dded42b920017c540443b, type: 3}
   - {fileID: 21300000, guid: 799e680d274fa6547b6c52c236aca7ca, type: 3}
   - {fileID: 21300000, guid: 2904699f29c2295449e91a999e96012a, type: 3}
   m_PackedSpriteNamesToIndex:
+  - BP_Builder
   - WP_SwordMan
   - WP_Commander
+  - WP_Builder
   - BP_SwordMan
   - BP_Commander
   m_Tag: PiecesAtlas

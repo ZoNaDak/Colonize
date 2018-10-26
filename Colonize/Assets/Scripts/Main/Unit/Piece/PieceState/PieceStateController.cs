@@ -11,14 +11,14 @@ namespace Colonize.Unit.Piece {
 		End
 	}
 
-	public class PieceStateController : StateController<PieceAction, PieceStateType, PieceController, PieceActionType> {
-		private List<Vector2> movePosList;
-		private int currentMovePosIdx;
-		private bool isAttackalbe;
-		private PieceStateType stateType;
-		private IUnit targetUnit;
+	public abstract class PieceStateController : StateController<PieceAction, PieceStateType, PieceController, PieceActionType> {
+		protected List<Vector2> movePosList;
+		protected int currentMovePosIdx;
+		protected bool isAttackalbe;
+		protected PieceStateType stateType;
+		protected IUnit targetUnit;
 
-		private static int checkableLayerMask = ~((1 << LayerMask.NameToLayer("Building")) | (1 << LayerMask.NameToLayer("Piece")));
+		protected static int checkableLayerMask;
 
 		internal IUnit TargetUnit { get { return targetUnit; } }
 
@@ -34,12 +34,11 @@ namespace Colonize.Unit.Piece {
 			} 
 		}
 
-		public PieceStateController(PieceController _controller)
-		 : base(_controller) {
-
+		void Awake() {
+			checkableLayerMask = ~((1 << LayerMask.NameToLayer("Building")) | (1 << LayerMask.NameToLayer("Piece")));
 		}
 
-		private void ChangeAction(PieceActionType _type) {
+		protected void ChangeAction(PieceActionType _type) {
 			if(this.currentState != null) {
 				this.currentState.StopState();
 			}
@@ -87,56 +86,8 @@ namespace Colonize.Unit.Piece {
 			}
 		}
 
-		//override
-		internal override void InitState() {
-			for(int i = 0; i < (int)PieceActionType.End; ++i) {
-				this.stateList.Add(null);
-			}
-
-			for(int i = 0; i < (int)PieceActionType.End; ++i) {
-				switch((PieceActionType)i) {
-					case PieceActionType.Stand:
-						this.stateList[i] = new Stand(this);
-					break;
-					case PieceActionType.Move:
-						this.stateList[i] = new Move(this);
-					break;
-					case PieceActionType.Attack:
-						this.stateList[i] = new Attack(this);
-					break;
-					default:
-						throw new System.NotImplementedException("Not Impelement InitStateType In Switch Sentence");
-				}
-			}
-			ChangeState(PieceStateType.Stand);
-		}
-
-		internal override void ChangeState(PieceStateType _type) {
-			switch(_type) {
-				case PieceStateType.Stand:
-					this.isAttackalbe = true;
-					ChangeAction(PieceActionType.Stand);
-				break;
-				case PieceStateType.Move:
-					this.isAttackalbe = false;
-					ChangeAction(PieceActionType.Move);
-				break;
-				case PieceStateType.Attack:
-					this.isAttackalbe = true;
-					ChangeAction(PieceActionType.Move);
-				break;
-				default:
-					throw new System.ArgumentException("PieceStateType is Not Correctable! : " + _type);
-			}
-			stateType = _type;
-		}
-
-		internal override void Update() {
-			if(this.isAttackalbe) {
-				if(this.currentState.Type != PieceActionType.Attack && CheckIsEnemyAroundHere()){
-					ChangeAction(PieceActionType.Attack);
-				}
-			}
-		}
+		//abstract override
+		internal abstract override void InitState(PieceController _controller);
+		internal abstract override void ChangeState(PieceStateType _type);
 	}
 }
