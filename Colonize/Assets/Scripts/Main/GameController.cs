@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using ExitGames.Client.Photon;
 using Pattern.Factory;
 using Colonize.Player;
+using Colonize.Utility.Coroutine;
 
 namespace Colonize.DefaultManager {
 	public class GameController : Pattern.Singleton.MonoSingleton<GameController> {
@@ -16,9 +17,11 @@ namespace Colonize.DefaultManager {
 		private Communicate.CommunicateManager communicator;
 		private List<PlayerController> playerList = new List<PlayerController>();
 		private PlayerController myPlayer;
+		private Coroutine notifyTextCoroutine;
 
 		[SerializeField] private MyCamera.MainCameraController mainCamera;
 		[SerializeField] private Text goldText;
+		[SerializeField] private Text notifyText;
 
 		public bool Ready { get { return ready; } }
 		public int PlayerId { get { return playerID; } }
@@ -103,6 +106,15 @@ namespace Colonize.DefaultManager {
 
 		public PlayerController GetPlayer(int _playerId) {
 			return playerList[_playerId];
+		}
+
+		public void SetNotifyText(string _text) {
+			if(notifyTextCoroutine != null) {
+				StopCoroutine(notifyTextCoroutine);
+			}
+			this.notifyText.gameObject.SetActive(true);
+			this.notifyText.text = _text;
+			notifyTextCoroutine = StartCoroutine(UseableCoroutine.WaitThenCallback(5.0f, () => this.notifyText.gameObject.SetActive(false), this.notifyTextCoroutine));
 		}
 
 		//Coroutine

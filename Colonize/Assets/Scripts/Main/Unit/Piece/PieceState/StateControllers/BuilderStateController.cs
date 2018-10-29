@@ -3,16 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Colonize.Unit.Piece {
-	public class SwordManStateController : PieceStateController {
+	public class BuilderStateController : PieceStateController {
 
 		void Update () {
-			if(this.controller.photonView.isMine) {
-				if(this.isAttackalbe && this.currentState.Type != PieceActionType.Attack && CheckIsEnemyAroundHere()){
-					ChangeAction(PieceActionType.Attack);
-				}
+			if(IsArrived()) {
+				ChangeAction(PieceActionType.Build);
 			}
 		}
 
+		public bool IsArrived() {
+			return false;
+		}
+
+		//override
 		internal override void InitState(PieceController _controller) {
 			this.controller = _controller;
 
@@ -28,8 +31,8 @@ namespace Colonize.Unit.Piece {
 					case PieceActionType.Move:
 						this.stateList[i] = new Move(this);
 					break;
-					case PieceActionType.Attack:
-						this.stateList[i] = new Attack(this);
+					case PieceActionType.Build:
+						this.stateList[i] = new Build(this);
 					break;
 					default:
 					continue;
@@ -41,15 +44,11 @@ namespace Colonize.Unit.Piece {
 		internal override void ChangeState(PieceStateType _type) {
 			switch(_type) {
 				case PieceStateType.Stand:
-					this.isAttackalbe = true;
+					this.isAttackalbe = false;
 					ChangeAction(PieceActionType.Stand);
 				break;
 				case PieceStateType.Move:
 					this.isAttackalbe = false;
-					ChangeAction(PieceActionType.Move);
-				break;
-				case PieceStateType.Attack:
-					this.isAttackalbe = true;
 					ChangeAction(PieceActionType.Move);
 				break;
 				default:

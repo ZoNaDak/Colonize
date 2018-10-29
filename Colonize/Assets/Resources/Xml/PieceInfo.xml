@@ -10,4 +10,14 @@
         <AttackRange>40</AttackRange>
         <AttackCooltime>1</AttackCooltime>
     </Piece>
+    <Piece>
+        <Id>1</Id>
+        <Name>Builder</Name>
+        <Hp>30</Hp>
+        <Attack>0</Attack>
+        <Speed>3</Speed>
+        <VisualRange>160</VisualRange>
+        <AttackRange>0</AttackRange>
+        <AttackCooltime>0</AttackCooltime>
+    </Piece>
 </PieceInfo>

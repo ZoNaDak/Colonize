@@ -25,6 +25,7 @@ namespace Colonize.Unit.Piece {
             }
         }
 
+        //override
         internal override void StartState() {
             if(!this.stateController.Controller.photonView.isMine) {
                 return;

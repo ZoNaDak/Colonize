@@ -9,16 +9,19 @@ namespace Colonize.ControllUI.UnitControll {
 	public enum ButtonType {
 		Camera,
 		SwordMan,
+		BuildCommander,
 		End
 	}
 
-	public class UnitControllButton : MonoBehaviour, Pattern.Observer.IObserverOfUnit<Unit.UnitController<Unit.Piece.PieceController, Unit.Piece.PieceStatus, Unit.Piece.PieceType>> {
+	public class UnitControllButton : MonoBehaviour, Pattern.Observer.IObserverOfUnit<Unit.IUnit> {
 		private static UnitControllBar unitControllBar;
 		private static RedRect redRect;
 		private static ControllBoard.ControllBoard controllBoard;
 
 		private ButtonType buttonType = ButtonType.End;
 		private ButtonRoll buttonRoll;
+
+		private InnerImage innerImage;
 
 		[SerializeField] private Image image;
 		[SerializeField] private Image unitImage;
@@ -55,6 +58,19 @@ namespace Colonize.ControllUI.UnitControll {
 				break;
 				case ButtonType.SwordMan:
 					buttonRoll = new PieceButtonRoll(Unit.Piece.PieceType.SwordMan);
+					this.innerImage = Instantiate(Pattern.Factory.PrefabFactory.Instance.FindPrefab("Controll", "InnerImageForPieceButton")).GetComponent<InnerImage>();
+					this.innerImage.transform.SetParent(this.transform);
+					this.innerImage.transform.localPosition = new Vector3();
+					this.innerImage.transform.SetAsFirstSibling();
+					this.imageMask = this.innerImage.ImageMask;
+				break;
+				case ButtonType.BuildCommander:
+					buttonRoll = new BuildButtonRoll(Unit.Building.BuildingType.Commander);
+					this.innerImage = Instantiate(Pattern.Factory.PrefabFactory.Instance.FindPrefab("Controll", "InnerImageForBuildButton")).GetComponent<InnerImage>();
+					this.innerImage.transform.SetParent(this.transform);
+					this.innerImage.transform.localPosition = new Vector3();
+					this.innerImage.transform.SetAsFirstSibling();
+					this.imageMask = this.innerImage.ImageMask;
 				break;
 				default:
 					throw new System.ArgumentException(string.Format("{0} is not UnitControllButtonType!", _type.ToString()), "_type");
@@ -84,9 +100,17 @@ namespace Colonize.ControllUI.UnitControll {
 			buttonRoll.DeactiveButton(this);
 		}
 
+		public void SetGold(int _gold) {
+			this.innerImage.SetGold(_gold);
+			BuildButtonRoll buildButtonRoll = this.buttonRoll as BuildButtonRoll;
+			if(buildButtonRoll != null) {
+				buildButtonRoll.cost = _gold;
+			}
+		}
+
 		//Interface Fuction
-		public void OnNotify(Unit.UnitController<Unit.Piece.PieceController, Unit.Piece.PieceStatus, Unit.Piece.PieceType> _piece) {
-			unitCountText.text = _piece.UnitNum.ToString();
+		public void OnNotify(Unit.IUnit _unit) {
+			unitCountText.text = _unit.GetNum().ToString();
 		}
 	}
 }

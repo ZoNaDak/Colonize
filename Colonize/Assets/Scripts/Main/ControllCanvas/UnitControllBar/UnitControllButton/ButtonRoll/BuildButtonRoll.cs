@@ -1,21 +1,24 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Colonize.DefaultManager;
 
 namespace Colonize.ControllUI.UnitControll {
-	public sealed class PieceButtonRoll : ButtonRoll {
+	public sealed class BuildButtonRoll : ButtonRoll {
 		private static float buttonWidth;
 		private static float outerImageOriginLocalPosX;
 
 		private bool active;
-		private Unit.Piece.PieceType pieceType;
+		private Unit.Building.BuildingType buildingType;
 		private Coroutine coroutine;
 
-		internal PieceButtonRoll(Unit.Piece.PieceType _pieceType) {
-			this.pieceType = _pieceType;
-		}
+		public int cost { get; set;}
 
+		internal BuildButtonRoll(Unit.Building.BuildingType _buildingType) {
+			this.buildingType = _buildingType;
+		}
+        
 		internal override void SetButtonForWake(UnitControllButton _button) {
 			if(buttonWidth == 0.0f) {
 				buttonWidth = (_button.transform as RectTransform).sizeDelta.x;
@@ -23,30 +26,26 @@ namespace Colonize.ControllUI.UnitControll {
 			}
 			switch(Communicate.CommunicateManager.Instance.PlayerId) {
 				case 0:
-					_button.UnitImage.sprite = Pattern.Factory.SpriteFactory.Instance.GetSprite("PiecesAtlas", "BP_SwordMan");
+					_button.UnitImage.sprite = Pattern.Factory.SpriteFactory.Instance.GetSprite("PiecesAtlas", "BP_Commander");
 					break;
 				case 1:
-					_button.UnitImage.sprite = Pattern.Factory.SpriteFactory.Instance.GetSprite("PiecesAtlas", "WP_SwordMan");
+					_button.UnitImage.sprite = Pattern.Factory.SpriteFactory.Instance.GetSprite("PiecesAtlas", "WP_Commander");
 					break;
 				default:
-					_button.UnitImage.sprite = Pattern.Factory.SpriteFactory.Instance.GetSprite("PiecesAtlas", "BP_SwordMan");
+					_button.UnitImage.sprite = Pattern.Factory.SpriteFactory.Instance.GetSprite("PiecesAtlas", "BP_Commander");
 					break;
 			}
+			
 			_button.UnitImage.gameObject.SetActive(true);
 			_button.UnitCountText.gameObject.SetActive(true);
 		}
-
+        
 		internal override void Click(UnitControllButton _button) {
 			if(active) {
 				_button.ImageMask.gameObject.SetActive(true);
 				float boardClickPosX = Camera.main.ScreenToWorldPoint(Input.mousePosition).x - _button.transform.position.x;
-				if(boardClickPosX < 0.0f) {
-					_button.ImageMask.transform.localPosition = new Vector2(-buttonWidth * 0.25f, 0.0f);
-					_button.MyControllBoard.SetControll(_button.MyControllBoard.ClickOnMoveOption(), this.pieceType);
-				} else {
-					_button.ImageMask.transform.localPosition = new Vector2(buttonWidth * 0.25f, 0.0f);
-					_button.MyControllBoard.SetControll(_button.MyControllBoard.ClickOnAttackOption(), this.pieceType);
-				}
+				_button.ImageMask.transform.localPosition = new Vector2(-buttonWidth * 0.25f, 0.0f);
+				_button.MyControllBoard.SetControll(_button.MyControllBoard.ClickOnBuildOption(), this.buildingType, this.cost);
 			} else {
 				this.active = true;
 				_button.ImageMask.gameObject.SetActive(false);
@@ -65,7 +64,7 @@ namespace Colonize.ControllUI.UnitControll {
 			}
 			this.coroutine = _button.StartCoroutine(this.MoveImageRight(_button));
 		}
-
+        
 		//Coroutine
 		private IEnumerator MoveImageLeft(UnitControllButton _button) {
 			while(outerImageOriginLocalPosX - buttonWidth < _button.OuterImage.transform.localPosition.x) {

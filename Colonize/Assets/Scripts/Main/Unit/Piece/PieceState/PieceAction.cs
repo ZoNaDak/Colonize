@@ -8,6 +8,7 @@ namespace Colonize.Unit.Piece {
 		Stand,
 		Move,
 		Attack,
+		Build,
 		End
 	}
 
@@ -25,4 +26,3 @@ namespace Colonize.Unit.Piece {
 		internal override abstract void StopState();
 	}
 }
-

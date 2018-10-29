@@ -4,13 +4,18 @@ using UnityEngine;
 
 namespace Colonize.Unit {
 	public interface IUnit {
-        int GetPlayerId();
-        Vector2 GetPos();
-        GameObject GetGameObject();
+        
         bool GetDead();
         bool IsMine();
-        void OnDestroy();
         
+
+        int GetPlayerId();
+        int GetNum();
         int Damaged(int _damage); // Return DamagedHp
+
+        GameObject GetGameObject();
+        Vector2 GetPos();
+
+        void OnDestroy();
     }
 }

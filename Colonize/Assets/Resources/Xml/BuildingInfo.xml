@@ -6,5 +6,6 @@
         <Hp>100</Hp>
         <ProduceTime>5.0</ProduceTime>
         <HarvestGold>20</HarvestGold>
+        <Cost>20</Cost>
     </Building>
 </BuildingInfo>

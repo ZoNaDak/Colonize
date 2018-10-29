@@ -32,6 +32,9 @@ namespace Colonize.ControllUI.UnitControll {
 			} finally {
 				awaked = true;
 			}
+			//InnerImage
+			Pattern.Factory.PrefabFactory.Instance.CreatePrefab("Controll", "InnerImageForPieceButton", true);
+			Pattern.Factory.PrefabFactory.Instance.CreatePrefab("Controll", "InnerImageForBuildButton", true);
 		}
 
 		void Start() {
@@ -45,6 +48,7 @@ namespace Colonize.ControllUI.UnitControll {
 		private void WakeButtons() {
 			this.unitControllButtonList[0].Wake(UnitControll.ButtonType.Camera);
 			this.unitControllButtonList[1].Wake(UnitControll.ButtonType.SwordMan);
+			this.unitControllButtonList[4].Wake(UnitControll.ButtonType.BuildCommander);
 		}
 
 		public UnitControllButton FindButton(ButtonType _type) {

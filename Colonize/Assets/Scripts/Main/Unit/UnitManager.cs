@@ -35,9 +35,7 @@ namespace Colonize.Unit {
 				this.unitSpriteNames.Add("WP_{0}");
 			} catch (System.NullReferenceException ex) {
 				throw ex;
-			} catch (System.Exception ex) {
-				throw ex;
-			}					
+			}				
 		}
 
 		public IEnumerable<TController> GetAllUnits() {
@@ -70,7 +68,7 @@ namespace Colonize.Unit {
 		}
 
 		//abstract
-		public abstract void CreateUnit(TType _type, Vector2 _pos);
+		public abstract TController CreateUnit(TType _type, Vector2 _pos);
 		public abstract IEnumerable<TController> GetUnits(TType _type);
 		protected abstract void SaveUnitInfoWithCoroutine(XmlNodeList _xmlNodes, string _xmlName);
 	}

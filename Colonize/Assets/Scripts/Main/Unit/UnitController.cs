@@ -4,12 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Colonize.Unit {
-	public abstract class UnitController<T, TStatus, TType> : Pattern.Observer.SubjectOfUnit<UnitController<T, TStatus, TType>>, IUnit
+	public abstract class UnitController<T, TStatus, TType> : Pattern.Observer.SubjectOfUnit<IUnit>, IUnit
 		where T : class
 		where TStatus : struct
 		where TType : struct, IComparable, IFormattable, IConvertible{
-		
-		protected static int unitNum;
 
 		protected TStatus status;
 		protected int playerId;
@@ -17,7 +15,6 @@ namespace Colonize.Unit {
 
 		[SerializeField] protected SpriteRenderer spriteRenderer;
 
-		public int UnitNum { get { return unitNum; } }
 		public int PlayerId { get { return playerId; } }
 		public TStatus Status { get { return status; } }
 		public bool Dead { get { return dead; } }
@@ -32,6 +29,10 @@ namespace Colonize.Unit {
 			return this.photonView.isMine; 
 		}
 
+		public bool GetDead() {
+			return this.dead;
+		}
+
 		public int GetPlayerId() {
 			return this.playerId;
 		}
@@ -44,9 +45,7 @@ namespace Colonize.Unit {
 			return this.gameObject;
 		}
 
-		public bool GetDead() {
-			return this.dead;
-		}
+		public abstract int GetNum();
 
 		//Observer
 		protected override void Notify() {

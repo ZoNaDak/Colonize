@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Xml;
 using System.Linq;
 using UnityEngine;
+using Colonize.ControllUI.UnitControll;
 
 namespace Colonize.Unit.Building {
 	public sealed class BuildingManager : UnitManager<BuildingManager, BuildingController, BuildingStatus, BuildingType> {
@@ -23,6 +24,28 @@ namespace Colonize.Unit.Building {
 
 		}
 
+		public bool CheckIsBuildingInLand(Vector2Int _landIdx) {
+			for(int i = 0; i < this.unitList.Count; ++i) {
+				if(_landIdx == Map.MapManager.Instance.GetLandIdx(this.unitList[i].transform.position)) {
+					return true;
+				}
+			}
+			return false;
+		}
+
+		public BuildingController NearestBuilding(Vector2 _pos) {
+			BuildingController nearest = this.unitList[0];
+			float minDist = Vector2.Distance(_pos, this.unitList[0].transform.position);
+			for(int i = 1; i < this.unitList.Count; ++i) {
+				float dist = Vector2.Distance(_pos, this.unitList[i].transform.position);
+				if(minDist > dist) {
+					nearest = this.unitList[i];
+				}
+			}
+
+			return nearest;
+		}
+
 		//overide
 		protected override void SaveUnitInfoWithCoroutine (XmlNodeList _xmlNodes, string _xmlName) {
 			foreach(XmlNode node in _xmlNodes) {
@@ -31,17 +54,21 @@ namespace Colonize.Unit.Building {
 					node.SelectSingleNode("Name").InnerText,
 					System.Convert.ToInt32(node.SelectSingleNode("Hp").InnerText),
 					float.Parse(node.SelectSingleNode("ProduceTime").InnerText),
-					System.Convert.ToInt32(node.SelectSingleNode("HarvestGold").InnerText));
+					System.Convert.ToInt32(node.SelectSingleNode("HarvestGold").InnerText),
+					System.Convert.ToInt32(node.SelectSingleNode("Cost").InnerText));
 				this.unitInfoDictionary.Add(status.type, status);
-				Pattern.Factory.PrefabFactory.Instance.CreatePrefab("Buildings", status.type.ToString(), true);
+				GameObject buildingPrefab = Pattern.Factory.PrefabFactory.Instance.CreatePrefab("Buildings", status.type.ToString(), true);
+				UnitControllButton button =  UnitControllBar.Instance.FindButton(string.Format("Build{0}", status.type.ToString()));
+				button.SetGold(status.cost);
 			}
 			MyXml.XmlManager.ClearXmlDoc(_xmlName);
 		}
 
-		public override void CreateUnit(BuildingType _type, Vector2 _pos) {
+		public override BuildingController CreateUnit(BuildingType _type, Vector2 _pos) {
+			BuildingController building;
 			try {
 				GameObject buildingPrefab = Pattern.Factory.PrefabFactory.Instance.FindPrefab("Buildings", _type.ToString());
-				BuildingController building = PhotonNetwork.Instantiate(string.Format("Prefabs/Buildings/{0}", _type.ToString())
+				building = PhotonNetwork.Instantiate(string.Format("Prefabs/Buildings/{0}", _type.ToString())
 				, new Vector3(_pos.x, _pos.y, buildingPrefab.transform.position.z)
 				, Quaternion.identity, 0).GetComponent<BuildingController>();
 				building.transform.SetParent(this.transform);
@@ -54,6 +81,7 @@ namespace Colonize.Unit.Building {
 			} catch(System.Exception ex) {
 				throw ex;
 			}
+			return building;
 		}
 
 		public override IEnumerable<BuildingController> GetUnits(BuildingType _type) {

@@ -7,15 +7,23 @@ namespace Colonize.Unit.Building {
 	public sealed class BuildingController : UnitController<BuildingController, BuildingStatus, BuildingType> {
 		
 		private static List<Vector2> producePosList = new List<Vector2>(16);
+		private static List<int> buildingNumList = new List<int>();
 		private static float harvestTime = 10.0f;
 
 		private int producePosIdx;
 		private Building.BuildingManager buildingManager;
 		private Piece.PieceManager pieceManager;
 
+		public int UnitNum { get { return buildingNumList[(int)this.status.type]; } }
+
 		void Awake() {
 			if(producePosList.Count == 0) {
 				CreateProducePos();
+			}
+			if(buildingNumList.Count == 0) {
+				for(int i = 0; i < (int)BuildingType.End; ++i) {
+					buildingNumList.Add(0);
+				}
 			}
 		}
 
@@ -64,7 +72,9 @@ namespace Colonize.Unit.Building {
 		//override
 		public override void OnDestroy() {
 			this.ClearObservers();
-			unitNum = 0;
+			if(IsMine()) {
+				buildingNumList[(int)this.status.type]--;
+			}
 		}
 
 		public override int Damaged(int _damage) {
@@ -76,6 +86,14 @@ namespace Colonize.Unit.Building {
 		public override void SetData(int _playerId, BuildingType _type) {
 			SetDataOnPhoton(_playerId, _type);
 			this.photonView.RPC("SetDataOnPhoton", PhotonTargets.Others, _playerId, _type);
+			buildingNumList[(int)this.status.type]++;
+			AddObserver(ControllUI.UnitControll.UnitControllBar.Instance.FindButton(string.Format("Build{0}", status.type.ToString())));
+			this.Notify();
+		}
+
+		//interface override
+		public override int GetNum() {
+			return this.UnitNum;
 		}
 
 		//Coroutine

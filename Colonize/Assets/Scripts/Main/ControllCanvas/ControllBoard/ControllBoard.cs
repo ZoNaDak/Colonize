@@ -1,6 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Colonize.DefaultManager;
+using Colonize.Unit.Building;
+using Colonize.Unit.Piece;
 
 namespace Colonize.ControllUI.ControllBoard {
 	public class ControllBoard : Pattern.Singleton.MonoSingleton<ControllBoard> {
@@ -10,8 +13,11 @@ namespace Colonize.ControllUI.ControllBoard {
 		private Vector2 blockSize = new Vector2();
 		private float clickedTime;
 		private bool drag = false;
-		private Unit.Piece.PieceManager pieceManager;
-		private Unit.Piece.PieceType selectedPieceType;
+		private BuildingManager buildingManager;
+		private PieceManager pieceManager;
+		private PieceType selectedPieceType;
+		private BuildingType selectedBuildingType;
+		private int selectedBuidlingCost;
 		
 		private System.Action OnClick;
 
@@ -30,11 +36,13 @@ namespace Colonize.ControllUI.ControllBoard {
 		}
 
 		private IEnumerator Initialize() {
-			yield return new WaitUntil(() => DefaultManager.GameController.Instance.Ready);
-			pieceManager = DefaultManager.GameController.Instance.MyPlayer.PieceManager;
+			yield return new WaitUntil(() => GameController.Instance.Ready);
+			this.buildingManager = GameController.Instance.MyPlayer.BuildingManager;
+			this.pieceManager = GameController.Instance.MyPlayer.PieceManager;
 			this.rectTransform = (this.transform as RectTransform);
-			blockSize.x = rectTransform.sizeDelta.x / Map.MapManager.Instance.LandNumX;
-			blockSize.y = rectTransform.sizeDelta.y / Map.MapManager.Instance.LandNumY;
+			this.blockSize = new Vector2(
+				rectTransform.sizeDelta.x / Map.MapManager.Instance.LandNumX,
+				blockSize.y = rectTransform.sizeDelta.y / Map.MapManager.Instance.LandNumY);
 			this.yellowRect.LandSize = Map.MapManager.Instance.GetLandSize();
 		}
 
@@ -78,9 +86,15 @@ namespace Colonize.ControllUI.ControllBoard {
 			Debug.Log(clickedTime);
 		}
 
-		public void SetControll(System.Action _click, Unit.Piece.PieceType _pieceType) {
+		public void SetControll(System.Action _click, PieceType _pieceType) {
 			this.OnClick = _click;
 			this.selectedPieceType = _pieceType;
+		}
+
+		public void SetControll(System.Action _click, BuildingType _buildingType, int _buildCost) {
+			this.OnClick = _click;
+			this.selectedBuildingType = _buildingType;
+			this.selectedBuidlingCost = _buildCost;
 		}
 
 		public Vector2 GetBoardPosFromWorldPos(Vector2 _worldPosition) {
@@ -111,6 +125,26 @@ namespace Colonize.ControllUI.ControllBoard {
 		public System.Action ClickOnAttackOption() {
 			return () => {
 				this.pieceManager.AttackPieces(selectedPieceType, GetLandIdxForClickBoard());
+			};
+		}
+
+		public System.Action ClickOnBuildOption() {
+			return () => {
+				if(GameController.Instance.MyPlayer.Gold < this.selectedBuidlingCost) {
+					GameController.Instance.SetNotifyText("Warning : Not enough Gold");
+					return;
+				}
+				if(this.buildingManager.CheckIsBuildingInLand(GetLandIdxForClickBoard())) {
+					GameController.Instance.SetNotifyText("Warning : Already building is click land");
+					return;
+				}
+				
+				GameController.Instance.MyPlayer.Gold -= this.selectedBuidlingCost;
+				Vector2 clickLandPos = GetLandPosForClickBoard();
+				Vector2 createPos = this.buildingManager.NearestBuilding(clickLandPos).transform.position;
+				createPos += (clickLandPos - createPos).normalized * 80.0f;
+				PieceController piece = this.pieceManager.CreateUnit(Unit.Piece.PieceType.Builder, createPos);
+				this.pieceManager.MovePiece(piece, GetLandIdxForClickBoard());
 			};
 		}
 	}

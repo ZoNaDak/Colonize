@@ -26,10 +26,10 @@ namespace Colonize.Unit.Piece {
 			return selectedUnits;
 		}
 
-		public void MovePieces(PieceType _type, Vector2Int _destLandPos) {
+		public void MovePieces(PieceType _type, Vector2Int _destLandIdx) {
 			var selectedPieces = GetUnitsGroupByLand(_type);
 			foreach(var piecesInSameLand in selectedPieces) {
-				List<Vector2> path = Map.MapManager.Instance.FindPath(piecesInSameLand.Key, _destLandPos);
+				List<Vector2> path = Map.MapManager.Instance.FindPath(piecesInSameLand.Key, _destLandIdx);
 				if(path.Count == 0) {
 					path.Add(Map.MapManager.Instance.GetLandPos(piecesInSameLand.Key.x, piecesInSameLand.Key.y));
 				}
@@ -37,6 +37,15 @@ namespace Colonize.Unit.Piece {
 					piece.SetMoveState(path);
 				}
 			}
+		}
+
+		public void MovePiece(PieceController _piece, Vector2Int _destLandIdx) {
+			Vector2Int landIdxUnderPiece =  Map.MapManager.Instance.GetLandIdx(_piece.transform.position);
+			List<Vector2> path = Map.MapManager.Instance.FindPath(landIdxUnderPiece, _destLandIdx);
+			if(path.Count == 0) {
+				path.Add(Map.MapManager.Instance.GetLandPos(landIdxUnderPiece.x, landIdxUnderPiece.y));
+			}
+			_piece.SetMoveState(path);
 		}
 
 		public void AttackPieces(PieceType _type, Vector2Int _destLandPos) {
@@ -62,17 +71,17 @@ namespace Colonize.Unit.Piece {
 					float.Parse(node.SelectSingleNode("AttackRange").InnerText),
 					float.Parse(node.SelectSingleNode("AttackCooltime").InnerText));
 				this.unitInfoDictionary.Add(status.type, status);
-				GameObject piecePrefab = Pattern.Factory.PrefabFactory.Instance.CreatePrefab("Pieces", status.type.ToString(), true);
-				piecePrefab.GetComponent<PieceController>().AddObserver(ControllUI.UnitControll.UnitControllBar.Instance.FindButton(status.type.ToString()));
+				Pattern.Factory.PrefabFactory.Instance.CreatePrefab("Pieces", status.type.ToString(), true);
 			}
 
 			MyXml.XmlManager.ClearXmlDoc(_xmlName);
 		}
 
-		public override void CreateUnit(PieceType _type, Vector2 _pos) {
+		public override PieceController CreateUnit(PieceType _type, Vector2 _pos) {
+			PieceController piece;
 			try {
 				GameObject piecePrefab = Pattern.Factory.PrefabFactory.Instance.FindPrefab("Pieces", _type.ToString());
-				PieceController piece = PhotonNetwork.Instantiate(string.Format("Prefabs/Pieces/{0}", _type.ToString())
+				piece = PhotonNetwork.Instantiate(string.Format("Prefabs/Pieces/{0}", _type.ToString())
 					, new Vector3(_pos.x, _pos.y, piecePrefab.transform.position.z)
 					, Quaternion.identity, 0).GetComponent<PieceController>();
 				piece.transform.SetParent(this.transform);
@@ -84,6 +93,8 @@ namespace Colonize.Unit.Piece {
 			} catch(System.Exception ex) {
 				throw ex;
 			}
+
+			return piece;
 		}
 
 		public override IEnumerable<PieceController> GetUnits(PieceType _type) {

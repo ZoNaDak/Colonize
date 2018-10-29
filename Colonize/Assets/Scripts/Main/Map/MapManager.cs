@@ -24,17 +24,7 @@ namespace Colonize.Map {
 				GameObject landPrefab = Pattern.Factory.PrefabFactory.Instance.CreatePrefab("Lands", "BasicLand", false);
 				this.landSizeX = landPrefab.transform.localScale.x;
 				this.landSizeY = landPrefab.transform.localScale.y;
-				//this.transform.Translate(landSize * 0.5f, landSize * 0.5f, 0.0f);
-				/*for(int i = 0; i < landNum; ++i) {
-					LandController land = Instantiate(landPrefab
-						, new Vector3(
-							this.transform.position.x + landSize * (i%landNumX)
-							, this.transform.position.y + landSize * (i/landNumY)
-							, this.transform.position.z)
-						, Quaternion.identity
-						, this.transform).GetComponent<LandController>();
-					this.landList.Add(land);
-				}*/
+				
 				for(int x = 0; x < landNumX; ++x) {
 					this.landList.Add(new List<LandController>());
 					for(int y = 0; y < landNumY; ++ y) {

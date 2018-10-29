@@ -9,6 +9,7 @@ namespace Colonize.Unit.Piece {
 	[Serializable]
 	public enum PieceType {
 		SwordMan,
+		Builder,
 		End
 	}
 

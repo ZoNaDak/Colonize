@@ -9,10 +9,19 @@ namespace Colonize.Unit.Piece {
 
 		[SerializeField] private PieceStateController stateController;
 
+		private static List<int> pieceNumList = new List<int>();
+
+		public int UnitNum { get { return pieceNumList[(int)this.status.type]; } }
+
 		void Awake() {
 			this.stateController.InitState(this);
 			if(!this.photonView.isMine) {
 				this.GetComponent<Rigidbody2D>().isKinematic = true;
+			}
+			if(pieceNumList.Count == 0) {
+				for(int i = 0; i < (int)PieceType.End; ++i) {
+					pieceNumList.Add(0);
+				}
 			}
 		}
 		
@@ -46,7 +55,9 @@ namespace Colonize.Unit.Piece {
 		//override
 		public override void OnDestroy() {
 			this.ClearObservers();
-			unitNum = 0;
+			if(IsMine()) {
+				pieceNumList[(int)this.status.type]--;
+			}
 		}
 
 		public override int Damaged(int _damage) {
@@ -58,8 +69,16 @@ namespace Colonize.Unit.Piece {
 		public override void SetData(int _playerId, PieceType _type) {
 			SetDataOnPhoton(_playerId, _type);
 			this.photonView.RPC("SetDataOnPhoton", PhotonTargets.Others, _playerId, _type);
-			unitNum++;
+			pieceNumList[(int)this.status.type]++;
+			if(status.type != PieceType.Builder) {
+				AddObserver(ControllUI.UnitControll.UnitControllBar.Instance.FindButton(status.type.ToString()));
+			}
 			this.Notify();
+		}
+
+		//interface override
+		public override int GetNum() {
+			return this.UnitNum;
 		}
 
 		//Photon
