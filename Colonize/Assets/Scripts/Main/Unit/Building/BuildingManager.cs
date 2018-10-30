@@ -40,6 +40,7 @@ namespace Colonize.Unit.Building {
 				float dist = Vector2.Distance(_pos, this.unitList[i].transform.position);
 				if(minDist > dist) {
 					nearest = this.unitList[i];
+					minDist = dist;
 				}
 			}
 
@@ -57,7 +58,7 @@ namespace Colonize.Unit.Building {
 					System.Convert.ToInt32(node.SelectSingleNode("HarvestGold").InnerText),
 					System.Convert.ToInt32(node.SelectSingleNode("Cost").InnerText));
 				this.unitInfoDictionary.Add(status.type, status);
-				GameObject buildingPrefab = Pattern.Factory.PrefabFactory.Instance.CreatePrefab("Buildings", status.type.ToString(), true);
+				Pattern.Factory.PrefabFactory.Instance.CreatePrefab("Buildings", status.type.ToString(), true);
 				UnitControllButton button =  UnitControllBar.Instance.FindButton(string.Format("Build{0}", status.type.ToString()));
 				button.SetGold(status.cost);
 			}
@@ -70,6 +71,27 @@ namespace Colonize.Unit.Building {
 				GameObject buildingPrefab = Pattern.Factory.PrefabFactory.Instance.FindPrefab("Buildings", _type.ToString());
 				building = PhotonNetwork.Instantiate(string.Format("Prefabs/Buildings/{0}", _type.ToString())
 				, new Vector3(_pos.x, _pos.y, buildingPrefab.transform.position.z)
+				, Quaternion.identity, 0).GetComponent<BuildingController>();
+				building.transform.SetParent(this.transform);
+				building.SetBuildingManager(this);
+				building.SetPieceManager(this.player.PieceManager);
+				building.SetData(this.playerId, _type);
+				this.unitList.Add(building);
+			} catch(System.NullReferenceException ex) {
+				throw ex;
+			} catch(System.Exception ex) {
+				throw ex;
+			}
+			return building;
+		}
+
+		public BuildingController CreateUnit(BuildingType _type, Vector2Int _landIdx) {
+			BuildingController building;
+			try {
+				Vector2 pos = Map.MapManager.Instance.GetLandPos(_landIdx.x, _landIdx.y);
+				GameObject buildingPrefab = Pattern.Factory.PrefabFactory.Instance.FindPrefab("Buildings", _type.ToString());
+				building = PhotonNetwork.Instantiate(string.Format("Prefabs/Buildings/{0}", _type.ToString())
+				, new Vector3(pos.x, pos.y, buildingPrefab.transform.position.z)
 				, Quaternion.identity, 0).GetComponent<BuildingController>();
 				building.transform.SetParent(this.transform);
 				building.SetBuildingManager(this);

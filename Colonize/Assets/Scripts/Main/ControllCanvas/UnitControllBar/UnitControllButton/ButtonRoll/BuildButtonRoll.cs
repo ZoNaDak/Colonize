@@ -43,7 +43,6 @@ namespace Colonize.ControllUI.UnitControll {
 		internal override void Click(UnitControllButton _button) {
 			if(active) {
 				_button.ImageMask.gameObject.SetActive(true);
-				float boardClickPosX = Camera.main.ScreenToWorldPoint(Input.mousePosition).x - _button.transform.position.x;
 				_button.ImageMask.transform.localPosition = new Vector2(-buttonWidth * 0.25f, 0.0f);
 				_button.MyControllBoard.SetControll(_button.MyControllBoard.ClickOnBuildOption(), this.buildingType, this.cost);
 			} else {

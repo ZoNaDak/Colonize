@@ -1,19 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Colonize.DefaultManager;
 
 namespace Colonize.Unit.Piece {
     public class Build : PieceAction {
         internal Build(PieceStateController _stateController)
-         : base(PieceActionType.Move, _stateController){
+         : base(PieceActionType.Build, _stateController){
 
         }
 
         internal IEnumerator BuildCoroutine() {
-            while (true) {
-                
-                yield return new WaitForSecondsRealtime(0.01f);
-            }
+            yield return new WaitForSecondsRealtime(0.01f);
+            Vector2Int landIdx = Map.MapManager.Instance.GetLandIdx(this.stateController.Controller.transform.position);
+            GameController.Instance.MyPlayer.BuildingManager.CreateUnit((this.stateController as BuilderStateController).BuildingType, landIdx);
+            this.stateController.Controller.SetDead();
+            GameController.Instance.MyPlayer.PieceManager.RemoveUnit(this.stateController.Controller);
         }
 
         internal override void StartState() {

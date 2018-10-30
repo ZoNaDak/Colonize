@@ -144,6 +144,7 @@ namespace Colonize.ControllUI.ControllBoard {
 				Vector2 createPos = this.buildingManager.NearestBuilding(clickLandPos).transform.position;
 				createPos += (clickLandPos - createPos).normalized * 80.0f;
 				PieceController piece = this.pieceManager.CreateUnit(Unit.Piece.PieceType.Builder, createPos);
+				(piece.StateController as BuilderStateController).SetBuildingType(this.selectedBuildingType);
 				this.pieceManager.MovePiece(piece, GetLandIdxForClickBoard());
 			};
 		}

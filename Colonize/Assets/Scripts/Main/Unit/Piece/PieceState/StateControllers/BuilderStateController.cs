@@ -4,14 +4,24 @@ using UnityEngine;
 
 namespace Colonize.Unit.Piece {
 	public class BuilderStateController : PieceStateController {
+		private Building.BuildingType buildingType;
+
+		internal Building.BuildingType BuildingType { get { return buildingType; } }
 
 		void Update () {
-			if(IsArrived()) {
+			if(this.currentState.Type != PieceActionType.Build && IsArrived()) {
 				ChangeAction(PieceActionType.Build);
 			}
 		}
 
+		public void SetBuildingType(Building.BuildingType _buildingType) {
+			this.buildingType = _buildingType;
+		}
+
 		public bool IsArrived() {
+			if(this.movePosList == null) {
+				return true;
+			}
 			return false;
 		}
 

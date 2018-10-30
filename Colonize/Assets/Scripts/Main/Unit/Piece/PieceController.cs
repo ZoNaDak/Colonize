@@ -12,6 +12,7 @@ namespace Colonize.Unit.Piece {
 		private static List<int> pieceNumList = new List<int>();
 
 		public int UnitNum { get { return pieceNumList[(int)this.status.type]; } }
+		public PieceStateController StateController { get { return stateController; } }
 
 		void Awake() {
 			this.stateController.InitState(this);
@@ -40,6 +41,10 @@ namespace Colonize.Unit.Piece {
 
 		internal void SetPieceManager(Piece.PieceManager _pieceManager) {
 			pieceManager = _pieceManager;
+		}
+
+		internal void SetDead() {
+			this.dead = true;
 		}
 
 		public void SetMoveState(List<Vector2> _movePosList) {
