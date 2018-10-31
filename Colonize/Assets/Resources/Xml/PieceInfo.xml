@@ -20,4 +20,14 @@
         <AttackRange>0</AttackRange>
         <AttackCooltime>0</AttackCooltime>
     </Piece>
+    <Piece>
+        <Id>2</Id>
+        <Name>Archer</Name>
+        <Hp>40</Hp>
+        <Attack>15</Attack>
+        <Speed>1.5</Speed>
+        <VisualRange>160</VisualRange>
+        <AttackRange>120</AttackRange>
+        <AttackCooltime>0.7</AttackCooltime>
+    </Piece>
 </PieceInfo>

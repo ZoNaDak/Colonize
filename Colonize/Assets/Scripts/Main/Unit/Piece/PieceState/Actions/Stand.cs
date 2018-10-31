@@ -9,11 +9,11 @@ namespace Colonize.Unit.Piece {
 
         }
 
-        internal override void StartState() {
+        internal override void StartAction() {
 
         }
 
-        internal override void StopState() {
+        internal override void StopAction() {
 
         }
     }

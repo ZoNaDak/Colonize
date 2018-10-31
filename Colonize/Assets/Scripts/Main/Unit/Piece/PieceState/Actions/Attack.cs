@@ -30,7 +30,7 @@ namespace Colonize.Unit.Piece {
                     if(this.stateController.MovePosList == null) {
                         this.stateController.ChangeState(PieceStateType.Stand);
                     } else {
-                        this.stateController.ChangeState(PieceStateType.Move);
+                        this.stateController.ChangeAction(PieceActionType.Move);
                     }
                     break;
                 }
@@ -46,14 +46,14 @@ namespace Colonize.Unit.Piece {
             }
         }  
 
-        internal override void StartState() {
+        internal override void StartAction() {
             if(!this.controller.photonView.isMine) {
                 return;
             }
             this.coroutine = this.controller.StartCoroutine(AttackCoroutine());
         }
 
-        internal override void StopState() {
+        internal override void StopAction() {
             if(this.coroutine != null) {
                 this.controller.StopCoroutine(this.coroutine);
             }

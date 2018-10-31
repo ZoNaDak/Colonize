@@ -26,14 +26,14 @@ namespace Colonize.Unit.Piece {
         }
 
         //override
-        internal override void StartState() {
+        internal override void StartAction() {
             if(!this.stateController.Controller.photonView.isMine) {
                 return;
             }
             this.coroutine = this.stateController.Controller.StartCoroutine(MoveCoroutine());
         }
 
-        internal override void StopState() {
+        internal override void StopAction() {
             if(this.coroutine != null) {
                 this.stateController.Controller.StopCoroutine(this.coroutine);
             }

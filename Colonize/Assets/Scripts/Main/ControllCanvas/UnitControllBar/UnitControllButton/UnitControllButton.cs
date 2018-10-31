@@ -10,6 +10,7 @@ namespace Colonize.ControllUI.UnitControll {
 		Camera,
 		SwordMan,
 		BuildCommander,
+		BuildMine,
 		End
 	}
 
@@ -66,6 +67,14 @@ namespace Colonize.ControllUI.UnitControll {
 				break;
 				case ButtonType.BuildCommander:
 					buttonRoll = new BuildButtonRoll(Unit.Building.BuildingType.Commander);
+					this.innerImage = Instantiate(Pattern.Factory.PrefabFactory.Instance.FindPrefab("Controll", "InnerImageForBuildButton")).GetComponent<InnerImage>();
+					this.innerImage.transform.SetParent(this.transform);
+					this.innerImage.transform.localPosition = new Vector3();
+					this.innerImage.transform.SetAsFirstSibling();
+					this.imageMask = this.innerImage.ImageMask;
+				break;
+				case ButtonType.BuildMine:
+					buttonRoll = new BuildButtonRoll(Unit.Building.BuildingType.Mine);
 					this.innerImage = Instantiate(Pattern.Factory.PrefabFactory.Instance.FindPrefab("Controll", "InnerImageForBuildButton")).GetComponent<InnerImage>();
 					this.innerImage.transform.SetParent(this.transform);
 					this.innerImage.transform.localPosition = new Vector3();

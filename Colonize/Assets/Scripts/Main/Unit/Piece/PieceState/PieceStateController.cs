@@ -11,7 +11,7 @@ namespace Colonize.Unit.Piece {
 		End
 	}
 
-	public abstract class PieceStateController : StateController<PieceAction, PieceStateType, PieceController, PieceActionType> {
+	public abstract class PieceStateController : StateController<PieceAction, PieceController, PieceActionType> {
 		protected List<Vector2> movePosList;
 		protected int currentMovePosIdx;
 		protected bool isAttackalbe;
@@ -38,12 +38,12 @@ namespace Colonize.Unit.Piece {
 			checkableLayerMask = ~((1 << LayerMask.NameToLayer("Building")) | (1 << LayerMask.NameToLayer("Piece")));
 		}
 
-		protected void ChangeAction(PieceActionType _type) {
-			if(this.currentState != null) {
-				this.currentState.StopState();
+		internal void ChangeAction(PieceActionType _type) {
+			if(this.currentAction != null) {
+				this.currentAction.StopAction();
 			}
-			this.currentState = this.stateList[(int)_type];
-			this.currentState.StartState();
+			this.currentAction = this.actionList[(int)_type];
+			this.currentAction.StartAction();
 		}
 
 		internal void SetCurrentMovePosToNext() {
@@ -86,8 +86,11 @@ namespace Colonize.Unit.Piece {
 			}
 		}
 
+		//abstract
+		internal abstract void ChangeState(PieceStateType _type);
+
 		//abstract override
 		internal abstract override void InitState(PieceController _controller);
-		internal abstract override void ChangeState(PieceStateType _type);
+		
 	}
 }

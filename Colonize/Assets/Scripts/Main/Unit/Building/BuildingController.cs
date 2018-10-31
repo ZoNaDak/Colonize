@@ -5,21 +5,17 @@ using Colonize.ControllUI.ControllBoard.MiniUnit;
 
 namespace Colonize.Unit.Building {
 	public sealed class BuildingController : UnitController<BuildingController, BuildingStatus, BuildingType> {
-		
-		private static List<Vector2> producePosList = new List<Vector2>(16);
 		private static List<int> buildingNumList = new List<int>();
-		private static float harvestTime = 10.0f;
 
-		private int producePosIdx;
 		private Building.BuildingManager buildingManager;
 		private Piece.PieceManager pieceManager;
 
+		[SerializeField] private BuildingStateController stateController;
+
+		internal Piece.PieceManager PieceManager { get { return pieceManager; } }
 		public int UnitNum { get { return buildingNumList[(int)this.status.type]; } }
 
 		void Awake() {
-			if(producePosList.Count == 0) {
-				CreateProducePos();
-			}
 			if(buildingNumList.Count == 0) {
 				for(int i = 0; i < (int)BuildingType.End; ++i) {
 					buildingNumList.Add(0);
@@ -28,37 +24,11 @@ namespace Colonize.Unit.Building {
 		}
 
 		void Start () {
-			if(this.photonView.isMine) {
-				StartCoroutine(CreatingUnit());
-				StartCoroutine(HarvestingGold());
-			}
+			this.stateController.InitState(this);
 		}
 
 		void Update () {
 			
-		}
-
-		private void CreateProducePos() {
-			//Rect Bottom
-			producePosList.Add(new Vector2(-32.0f, -64.0f));
-			producePosList.Add(new Vector2(0.0f, -64.0f));
-			producePosList.Add(new Vector2(32.0f, -64.0f));
-			producePosList.Add(new Vector2(64.0f, -64.0f));
-			//Rect Right
-			producePosList.Add(new Vector2(64.0f, -32.0f));
-			producePosList.Add(new Vector2(64.0f, 0.0f));
-			producePosList.Add(new Vector2(64.0f, 32.0f));
-			producePosList.Add(new Vector2(64.0f, 64.0f));
-			//Rect Up
-			producePosList.Add(new Vector2(32.0f, 64.0f));
-			producePosList.Add(new Vector2(0.0f, 64.0f));
-			producePosList.Add(new Vector2(-32.0f, 64.0f));
-			producePosList.Add(new Vector2(-64.0f, 64.0f));
-			//Rect Left
-			producePosList.Add(new Vector2(-64.0f, 32.0f));
-			producePosList.Add(new Vector2(-64.0f, 0.0f));
-			producePosList.Add(new Vector2(-64.0f, -32.0f));
-			producePosList.Add(new Vector2(-64.0f, -64.0f));
 		}
 
 		internal void SetBuildingManager(BuildingManager _buildingManager) {
@@ -94,30 +64,6 @@ namespace Colonize.Unit.Building {
 		//interface override
 		public override int GetNum() {
 			return this.UnitNum;
-		}
-
-		//Coroutine
-		private IEnumerator CreatingUnit() {
-			yield return new WaitUntil(() => PhotonNetwork.connectionStateDetailed == ClientState.Joined);
-			
-			while(true) {
-				yield return new WaitForSecondsRealtime(this.status.produceCompleteTime);
-				Vector2 producePos = producePosList[producePosIdx] + (Vector2)this.transform.position;
-				producePosIdx++;
-				if(producePosIdx >= producePosList.Count) {
-					producePosIdx = 0;
-				}
-				pieceManager.CreateUnit(Piece.PieceType.SwordMan, producePos);
-			}
-		}
-
-		private IEnumerator HarvestingGold() {
-			yield return new WaitUntil(() => PhotonNetwork.connectionStateDetailed == ClientState.Joined);
-			
-			while(true) {
-				yield return new WaitForSecondsRealtime(harvestTime);
-				this.buildingManager.Player.Gold += this.status.harvestGold;
-			}
 		}
 
 		//Photon

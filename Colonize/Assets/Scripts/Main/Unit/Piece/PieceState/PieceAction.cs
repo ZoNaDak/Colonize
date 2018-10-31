@@ -22,7 +22,7 @@ namespace Colonize.Unit.Piece {
 			this.stateController = _stateController;
 		}
 
-		internal override abstract void StartState();
-		internal override abstract void StopState();
+		internal override abstract void StartAction();
+		internal override abstract void StopAction();
 	}
 }

@@ -54,6 +54,7 @@ namespace Colonize.Unit.Building {
 					(BuildingType)(System.Convert.ToInt32(node.SelectSingleNode("Id").InnerText)),
 					node.SelectSingleNode("Name").InnerText,
 					System.Convert.ToInt32(node.SelectSingleNode("Hp").InnerText),
+					System.Convert.ToInt32(node.SelectSingleNode("ProducePieceId").InnerText),
 					float.Parse(node.SelectSingleNode("ProduceTime").InnerText),
 					System.Convert.ToInt32(node.SelectSingleNode("HarvestGold").InnerText),
 					System.Convert.ToInt32(node.SelectSingleNode("Cost").InnerText));

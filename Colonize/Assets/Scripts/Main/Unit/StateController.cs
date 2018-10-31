@@ -4,20 +4,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Colonize.Unit {
-	public abstract class StateController<TState, TType, TController, TActionType> : MonoBehaviour
-		where TState : UnitAction<TActionType, TController>
-		where TType : struct, IComparable, IFormattable, IConvertible
+	public abstract class StateController<TAction, TController, TActionType> : MonoBehaviour
+		where TAction : UnitAction<TActionType, TController>
 		where TController : MonoBehaviour
 		where TActionType : struct, IComparable, IFormattable, IConvertible {
 	
-		protected List<TState> stateList = new List<TState>();
-		protected TState currentState;
+		protected List<TAction> actionList = new List<TAction>();
+		protected TAction currentAction;
 		
 		protected TController controller;
 
 		internal TController Controller { get { return controller; } }
 
 		internal abstract void InitState(TController _controller);
-		internal abstract void ChangeState(TType _type);
 	}
 }

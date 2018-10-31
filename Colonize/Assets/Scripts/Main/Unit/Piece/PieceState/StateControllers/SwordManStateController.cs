@@ -7,7 +7,7 @@ namespace Colonize.Unit.Piece {
 
 		void Update () {
 			if(this.controller.photonView.isMine) {
-				if(this.isAttackalbe && this.currentState.Type != PieceActionType.Attack && CheckIsEnemyAroundHere()){
+				if(this.isAttackalbe && this.currentAction.Type != PieceActionType.Attack && CheckIsEnemyAroundHere()){
 					ChangeAction(PieceActionType.Attack);
 				}
 			}
@@ -17,19 +17,19 @@ namespace Colonize.Unit.Piece {
 			this.controller = _controller;
 
 			for(int i = 0; i < (int)PieceActionType.End; ++i) {
-				this.stateList.Add(null);
+				this.actionList.Add(null);
 			}
 
 			for(int i = 0; i < (int)PieceActionType.End; ++i) {
 				switch((PieceActionType)i) {
 					case PieceActionType.Stand:
-						this.stateList[i] = new Stand(this);
+						this.actionList[i] = new Stand(this);
 					break;
 					case PieceActionType.Move:
-						this.stateList[i] = new Move(this);
+						this.actionList[i] = new Move(this);
 					break;
 					case PieceActionType.Attack:
-						this.stateList[i] = new Attack(this);
+						this.actionList[i] = new Attack(this);
 					break;
 					default:
 					continue;

@@ -16,8 +16,8 @@ namespace Colonize.Unit {
 			this.type = _type;
 		}
 
-		internal abstract void StartState();
-		internal abstract void StopState();
+		internal abstract void StartAction();
+		internal abstract void StopAction();
 	}
 }
 

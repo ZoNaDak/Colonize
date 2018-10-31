@@ -49,6 +49,7 @@ namespace Colonize.ControllUI.UnitControll {
 			this.unitControllButtonList[0].Wake(UnitControll.ButtonType.Camera);
 			this.unitControllButtonList[1].Wake(UnitControll.ButtonType.SwordMan);
 			this.unitControllButtonList[4].Wake(UnitControll.ButtonType.BuildCommander);
+			this.unitControllButtonList[5].Wake(UnitControll.ButtonType.BuildMine);
 		}
 
 		public UnitControllButton FindButton(ButtonType _type) {

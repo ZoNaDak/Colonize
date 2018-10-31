@@ -23,13 +23,13 @@ namespace Colonize.ControllUI.UnitControll {
 			}
 			switch(Communicate.CommunicateManager.Instance.PlayerId) {
 				case 0:
-					_button.UnitImage.sprite = Pattern.Factory.SpriteFactory.Instance.GetSprite("PiecesAtlas", "BP_SwordMan");
+					_button.UnitImage.sprite = Pattern.Factory.SpriteFactory.Instance.GetSprite("PiecesAtlas", string.Format("BP_{0}", this.pieceType.ToString()));
 					break;
 				case 1:
-					_button.UnitImage.sprite = Pattern.Factory.SpriteFactory.Instance.GetSprite("PiecesAtlas", "WP_SwordMan");
+					_button.UnitImage.sprite = Pattern.Factory.SpriteFactory.Instance.GetSprite("PiecesAtlas", string.Format("WP_{0}", this.pieceType.ToString()));
 					break;
 				default:
-					_button.UnitImage.sprite = Pattern.Factory.SpriteFactory.Instance.GetSprite("PiecesAtlas", "BP_SwordMan");
+					_button.UnitImage.sprite = Pattern.Factory.SpriteFactory.Instance.GetSprite("PiecesAtlas", string.Format("BP_{0}", this.pieceType.ToString()));
 					break;
 			}
 			_button.UnitImage.gameObject.SetActive(true);

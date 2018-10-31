@@ -4,8 +4,27 @@
         <Id>0</Id>
         <Name>Commander</Name>
         <Hp>100</Hp>
+        <ProducePieceId>0</ProducePieceId>
         <ProduceTime>5.0</ProduceTime>
         <HarvestGold>20</HarvestGold>
         <Cost>20</Cost>
+    </Building>
+    <Building>
+        <Id>1</Id>
+        <Name>Mine</Name>
+        <Hp>100</Hp>
+        <ProducePieceId>-1</ProducePieceId>
+        <ProduceTime>-1.0</ProduceTime>
+        <HarvestGold>100</HarvestGold>
+        <Cost>60</Cost>
+    </Building>
+    <Building>
+        <Id>2</Id>
+        <Name>ArcheryField</Name>
+        <Hp>80</Hp>
+        <ProducePieceId>2</ProducePieceId>
+        <ProduceTime>3.0</ProduceTime>
+        <HarvestGold>10</HarvestGold>
+        <Cost>80</Cost>
     </Building>
 </BuildingInfo>

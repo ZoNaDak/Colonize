@@ -9,7 +9,7 @@ namespace Colonize.Unit.Piece {
 		internal Building.BuildingType BuildingType { get { return buildingType; } }
 
 		void Update () {
-			if(this.currentState.Type != PieceActionType.Build && IsArrived()) {
+			if(this.currentAction.Type != PieceActionType.Build && IsArrived()) {
 				ChangeAction(PieceActionType.Build);
 			}
 		}
@@ -30,19 +30,19 @@ namespace Colonize.Unit.Piece {
 			this.controller = _controller;
 
 			for(int i = 0; i < (int)PieceActionType.End; ++i) {
-				this.stateList.Add(null);
+				this.actionList.Add(null);
 			}
 
 			for(int i = 0; i < (int)PieceActionType.End; ++i) {
 				switch((PieceActionType)i) {
 					case PieceActionType.Stand:
-						this.stateList[i] = new Stand(this);
+						this.actionList[i] = new Stand(this);
 					break;
 					case PieceActionType.Move:
-						this.stateList[i] = new Move(this);
+						this.actionList[i] = new Move(this);
 					break;
 					case PieceActionType.Build:
-						this.stateList[i] = new Build(this);
+						this.actionList[i] = new Build(this);
 					break;
 					default:
 					continue;

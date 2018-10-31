@@ -18,14 +18,14 @@ namespace Colonize.Unit.Piece {
             GameController.Instance.MyPlayer.PieceManager.RemoveUnit(this.stateController.Controller);
         }
 
-        internal override void StartState() {
+        internal override void StartAction() {
             if(!this.stateController.Controller.photonView.isMine) {
                 return;
             }
             this.coroutine = this.stateController.Controller.StartCoroutine(BuildCoroutine());
         }
 
-        internal override void StopState() {
+        internal override void StopAction() {
             if(this.coroutine != null) {
                 this.stateController.Controller.StopCoroutine(this.coroutine);
             }
