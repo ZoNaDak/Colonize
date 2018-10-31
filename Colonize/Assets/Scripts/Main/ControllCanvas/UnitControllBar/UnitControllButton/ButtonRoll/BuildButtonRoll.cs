@@ -15,6 +15,8 @@ namespace Colonize.ControllUI.UnitControll {
 
 		public int cost { get; set;}
 
+		public Unit.Building.BuildingType BuildingType { get { return buildingType; } }
+
 		internal BuildButtonRoll(Unit.Building.BuildingType _buildingType) {
 			this.buildingType = _buildingType;
 		}
@@ -41,7 +43,7 @@ namespace Colonize.ControllUI.UnitControll {
 		}
         
 		internal override void Click(UnitControllButton _button) {
-			if(active) {
+			if(this.active) {
 				_button.ImageMask.gameObject.SetActive(true);
 				_button.ImageMask.transform.localPosition = new Vector2(-buttonWidth * 0.25f, 0.0f);
 				_button.MyControllBoard.SetControll(_button.MyControllBoard.ClickOnBuildOption(), this.buildingType, this.cost);

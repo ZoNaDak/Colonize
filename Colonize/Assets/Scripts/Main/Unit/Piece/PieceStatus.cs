@@ -10,6 +10,7 @@ namespace Colonize.Unit.Piece {
 	public enum PieceType {
 		SwordMan,
 		Builder,
+		Archer,
 		End
 	}
 

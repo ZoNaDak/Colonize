@@ -22,7 +22,9 @@ namespace Colonize.Unit.Piece {
 		}
 
 		private IEnumerable<IGrouping<Vector2Int, PieceController>> GetUnitsGroupByLand(PieceType _type) {
-			var selectedUnits =  from controller in this.unitList group controller by Map.MapManager.Instance.GetLandIdx(controller.transform.position);
+			var selectedUnits =  from controller in this.unitList
+				where controller.Status.type == _type
+				group controller by Map.MapManager.Instance.GetLandIdx(controller.transform.position);
 			return selectedUnits;
 		}
 

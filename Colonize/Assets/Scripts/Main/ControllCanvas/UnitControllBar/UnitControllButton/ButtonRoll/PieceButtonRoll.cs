@@ -12,6 +12,8 @@ namespace Colonize.ControllUI.UnitControll {
 		private Unit.Piece.PieceType pieceType;
 		private Coroutine coroutine;
 
+		public Unit.Piece.PieceType PieceType { get { return pieceType; } }
+
 		internal PieceButtonRoll(Unit.Piece.PieceType _pieceType) {
 			this.pieceType = _pieceType;
 		}
@@ -37,7 +39,7 @@ namespace Colonize.ControllUI.UnitControll {
 		}
 
 		internal override void Click(UnitControllButton _button) {
-			if(active) {
+			if(this.active) {
 				_button.ImageMask.gameObject.SetActive(true);
 				float boardClickPosX = Camera.main.ScreenToWorldPoint(Input.mousePosition).x - _button.transform.position.x;
 				if(boardClickPosX < 0.0f) {

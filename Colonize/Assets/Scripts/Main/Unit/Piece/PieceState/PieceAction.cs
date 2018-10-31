@@ -8,6 +8,7 @@ namespace Colonize.Unit.Piece {
 		Stand,
 		Move,
 		Attack,
+		Shoot,
 		Build,
 		End
 	}

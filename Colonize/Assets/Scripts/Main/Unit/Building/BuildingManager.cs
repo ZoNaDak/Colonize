@@ -60,7 +60,7 @@ namespace Colonize.Unit.Building {
 					System.Convert.ToInt32(node.SelectSingleNode("Cost").InnerText));
 				this.unitInfoDictionary.Add(status.type, status);
 				Pattern.Factory.PrefabFactory.Instance.CreatePrefab("Buildings", status.type.ToString(), true);
-				UnitControllButton button =  UnitControllBar.Instance.FindButton(string.Format("Build{0}", status.type.ToString()));
+				UnitControllButton button =  UnitControllBar.Instance.FindButton(status.type);
 				button.SetGold(status.cost);
 			}
 			MyXml.XmlManager.ClearXmlDoc(_xmlName);

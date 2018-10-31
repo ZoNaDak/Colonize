@@ -76,7 +76,7 @@ namespace Colonize.Unit.Piece {
 			this.photonView.RPC("SetDataOnPhoton", PhotonTargets.Others, _playerId, _type);
 			pieceNumList[(int)this.status.type]++;
 			if(status.type != PieceType.Builder) {
-				AddObserver(ControllUI.UnitControll.UnitControllBar.Instance.FindButton(status.type.ToString()));
+				AddObserver(ControllUI.UnitControll.UnitControllBar.Instance.FindButton(this.status.type));
 			}
 			this.Notify();
 		}

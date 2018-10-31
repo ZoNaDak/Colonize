@@ -46,28 +46,36 @@ namespace Colonize.ControllUI.UnitControll {
 		}
 
 		private void WakeButtons() {
-			this.unitControllButtonList[0].Wake(UnitControll.ButtonType.Camera);
-			this.unitControllButtonList[1].Wake(UnitControll.ButtonType.SwordMan);
-			this.unitControllButtonList[4].Wake(UnitControll.ButtonType.BuildCommander);
-			this.unitControllButtonList[5].Wake(UnitControll.ButtonType.BuildMine);
+			UnitControllButton.InitButton();
+			this.unitControllButtonList[0].WakeCamera();
+			this.unitControllButtonList[1].WakePiece(Unit.Piece.PieceType.SwordMan);
+			this.unitControllButtonList[2].WakePiece(Unit.Piece.PieceType.Archer);
+			this.unitControllButtonList[4].WakeBuild(Unit.Building.BuildingType.Commander);
+			this.unitControllButtonList[5].WakeBuild(Unit.Building.BuildingType.Mine);
+			this.unitControllButtonList[6].WakeBuild(Unit.Building.BuildingType.ArcheryField);
 		}
 
-		public UnitControllButton FindButton(ButtonType _type) {
+		public UnitControllButton FindButton(Unit.Piece.PieceType _type) {
 			for(int i = 0; i < unitControllButtonList.Count; ++i) {
-				if(unitControllButtonList[i].ButtonType == _type) {
-					return unitControllButtonList[i];
+				if(unitControllButtonList[i].ButtonType == ButtonType.Piece) {
+					if((unitControllButtonList[i].ButtonRoll as PieceButtonRoll).PieceType == _type) {
+						return unitControllButtonList[i];
+					}
 				}
 			}
 
 			throw new System.ArgumentNullException(string.Format("Can't Find Button. Type : {0}" + _type));
 		}
 
-		public UnitControllButton FindButton(string _type) {
+		public UnitControllButton FindButton(Unit.Building.BuildingType _type) {
 			for(int i = 0; i < unitControllButtonList.Count; ++i) {
-				if(unitControllButtonList[i].ButtonType.ToString() == _type) {
-					return unitControllButtonList[i];
+				if(unitControllButtonList[i].ButtonType == ButtonType.Build) {
+					if((unitControllButtonList[i].ButtonRoll as BuildButtonRoll).BuildingType == _type) {
+						return unitControllButtonList[i];
+					}
 				}
 			}
+
 			throw new System.ArgumentNullException(string.Format("Can't Find Button. Type : {0}" + _type));
 		}
 

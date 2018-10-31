@@ -27,7 +27,7 @@ namespace Colonize.Unit.Building {
             for(int i = 0; i < (int)BuildingActionType.End; ++i) {
                 switch((BuildingActionType)i) {
                     case BuildingActionType.Produce:
-                        //this.actionList[i] = new Produce(this);
+                        this.actionList[i] = new Produce(this);
                     break;
                     case BuildingActionType.Harvest:
                         this.actionList[i] = new Harvest(this);

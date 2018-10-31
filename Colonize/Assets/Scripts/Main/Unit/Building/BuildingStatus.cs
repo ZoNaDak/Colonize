@@ -10,6 +10,7 @@ namespace Colonize.Unit.Building {
 	public enum BuildingType {
 		Commander,
 		Mine,
+		ArcheryField,
 		End
 	}
 

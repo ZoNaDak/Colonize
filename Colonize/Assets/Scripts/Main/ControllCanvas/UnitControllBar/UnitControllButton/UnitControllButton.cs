@@ -8,9 +8,8 @@ using Colonize;
 namespace Colonize.ControllUI.UnitControll {
 	public enum ButtonType {
 		Camera,
-		SwordMan,
-		BuildCommander,
-		BuildMine,
+		Piece,
+		Build,
 		End
 	}
 
@@ -38,52 +37,51 @@ namespace Colonize.ControllUI.UnitControll {
 		internal Image ImageMask { get { return imageMask; } }
 		internal GameObject OuterImage { get { return outerImage; } }
 		internal ControllBoard.ControllBoard MyControllBoard { get { return controllBoard; } }
+		internal ButtonRoll ButtonRoll { get { return buttonRoll; } }
 
 		void Awake() {
 			this.unitImage.gameObject.SetActive(false);
 			this.unitCountText.gameObject.SetActive(false);
 		}
-		
-		internal void Wake(ButtonType _type) {
+
+		void Start() {
+			
+		}
+
+		internal static void InitButton() {
 			if(unitControllBar == null) {
 				unitControllBar = UnitControllBar.Instance;
 				redRect = unitControllBar.RedRect;
 				controllBoard = ControllBoard.ControllBoard.Instance;
 			}
-			this.buttonType = _type;
+		}
 
-			switch(_type) {
-				case ButtonType.Camera:
-					buttonRoll = new CameraButtonRoll();
-					redRect.SetControll(this);
-				break;
-				case ButtonType.SwordMan:
-					buttonRoll = new PieceButtonRoll(Unit.Piece.PieceType.SwordMan);
-					this.innerImage = Instantiate(Pattern.Factory.PrefabFactory.Instance.FindPrefab("Controll", "InnerImageForPieceButton")).GetComponent<InnerImage>();
-					this.innerImage.transform.SetParent(this.transform);
-					this.innerImage.transform.localPosition = new Vector3();
-					this.innerImage.transform.SetAsFirstSibling();
-					this.imageMask = this.innerImage.ImageMask;
-				break;
-				case ButtonType.BuildCommander:
-					buttonRoll = new BuildButtonRoll(Unit.Building.BuildingType.Commander);
-					this.innerImage = Instantiate(Pattern.Factory.PrefabFactory.Instance.FindPrefab("Controll", "InnerImageForBuildButton")).GetComponent<InnerImage>();
-					this.innerImage.transform.SetParent(this.transform);
-					this.innerImage.transform.localPosition = new Vector3();
-					this.innerImage.transform.SetAsFirstSibling();
-					this.imageMask = this.innerImage.ImageMask;
-				break;
-				case ButtonType.BuildMine:
-					buttonRoll = new BuildButtonRoll(Unit.Building.BuildingType.Mine);
-					this.innerImage = Instantiate(Pattern.Factory.PrefabFactory.Instance.FindPrefab("Controll", "InnerImageForBuildButton")).GetComponent<InnerImage>();
-					this.innerImage.transform.SetParent(this.transform);
-					this.innerImage.transform.localPosition = new Vector3();
-					this.innerImage.transform.SetAsFirstSibling();
-					this.imageMask = this.innerImage.ImageMask;
-				break;
-				default:
-					throw new System.ArgumentException(string.Format("{0} is not UnitControllButtonType!", _type.ToString()), "_type");
-			}
+		internal void WakeCamera() {
+			this.buttonType = ButtonType.Camera;
+			buttonRoll = new CameraButtonRoll();
+			redRect.SetControll(this);
+			buttonRoll.SetButtonForWake(this);
+		}
+
+		internal void WakePiece(Unit.Piece.PieceType _type) {
+			this.buttonType = ButtonType.Piece;
+			buttonRoll = new PieceButtonRoll(_type);
+			this.innerImage = Instantiate(Pattern.Factory.PrefabFactory.Instance.FindPrefab("Controll", "InnerImageForPieceButton")).GetComponent<InnerImage>();
+			this.innerImage.transform.SetParent(this.transform);
+			this.innerImage.transform.localPosition = new Vector3();
+			this.innerImage.transform.SetAsFirstSibling();
+			this.imageMask = this.innerImage.ImageMask;
+			buttonRoll.SetButtonForWake(this);
+		}
+
+		internal void WakeBuild(Unit.Building.BuildingType _type) {
+			this.buttonType = ButtonType.Build;
+			buttonRoll = new BuildButtonRoll(_type);
+			this.innerImage = Instantiate(Pattern.Factory.PrefabFactory.Instance.FindPrefab("Controll", "InnerImageForBuildButton")).GetComponent<InnerImage>();
+			this.innerImage.transform.SetParent(this.transform);
+			this.innerImage.transform.localPosition = new Vector3();
+			this.innerImage.transform.SetAsFirstSibling();
+			this.imageMask = this.innerImage.ImageMask;
 			buttonRoll.SetButtonForWake(this);
 		}
 
@@ -93,7 +91,7 @@ namespace Colonize.ControllUI.UnitControll {
 			}
 
 			try {
-				if(redRect.ActiveButton.ButtonType != this.ButtonType) {
+				if(redRect.ActiveButton != this) {
 					redRect.ActiveButton.Deactive();
 					redRect.SetControll(this);
 				}
