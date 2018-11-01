@@ -47,7 +47,7 @@ namespace Colonize.Join {
 		private IEnumerator OnWait() {
 			while(true) {
 				if(communicator.CheckPlayer()) {
-					PhotonNetwork.room.IsVisible = false;
+					PhotonNetwork.room.IsOpen = false;
 					communicator.JoinedRoom = true;
 					StartCoroutine(LoadMainScene());
 				}
@@ -91,16 +91,19 @@ namespace Colonize.Join {
 
 			ClearRoomList();
 
-			string roomFormat = "Room {0}";
 			float startYPos = 200.0f;
 			float roomPosInterval = (roomPrefab.transform as RectTransform).sizeDelta.y + 20.0f;
-			for (int i = 0; i < this.communicator.GetRooms().Length; i++) {
+			RoomInfo[] roomInfoes = this.communicator.GetRooms();
+			for (int i = 0; i < roomInfoes.Length; i++) {
+				if(roomInfoes[i].IsOpen == false){
+					continue;
+				}
 				Room.RoomController room = Instantiate(this.roomPrefab).GetComponent<Room.RoomController>();
 				room.transform.SetParent (this.rooms.transform);
 				room.transform.localPosition = new Vector3(0.0f, startYPos -roomPosInterval * i);
 				room.transform.localScale = this.roomPrefab.transform.localScale;
-				room.Initialize(string.Format(roomFormat, i));
-				this.roomList.Add (room);
+				room.Initialize(roomInfoes[i].Name);
+				this.roomList.Add(room);
 			}
 		}
 

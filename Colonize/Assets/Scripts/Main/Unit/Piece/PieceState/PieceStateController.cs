@@ -24,6 +24,7 @@ namespace Colonize.Unit.Piece {
 
 		public List<Vector2> MovePosList { get { return movePosList; } }
 		public PieceStateType StateType { get { return stateType; } }
+		public int ChecakableLayerMask { get { return checkableLayerMask; } }
 
 		public Vector2 CurrentMovePos { 
 			get {
@@ -35,7 +36,7 @@ namespace Colonize.Unit.Piece {
 		}
 
 		void Awake() {
-			checkableLayerMask = ~((1 << LayerMask.NameToLayer("Building")) | (1 << LayerMask.NameToLayer("Piece")));
+			checkableLayerMask = LayerMask.GetMask("Unit");
 		}
 
 		internal void ChangeAction(PieceActionType _type) {
@@ -56,6 +57,7 @@ namespace Colonize.Unit.Piece {
 
 		internal bool CheckIsEnemyAroundHere() {
 			Collider2D[] unitInRange = Physics2D.OverlapCircleAll(this.controller.transform.position, this.controller.Status.visualRange, checkableLayerMask);
+			
 			var enemiesInRange = from enemy in unitInRange
 				where enemy.gameObject != this.controller.gameObject && !enemy.GetComponentInChildren<IUnit>().IsMine() && !enemy.GetComponentInChildren<IUnit>().GetDead()
 				select enemy.GetComponentInChildren<IUnit>();

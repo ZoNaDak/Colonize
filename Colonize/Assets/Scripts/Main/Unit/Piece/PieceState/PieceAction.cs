@@ -14,7 +14,7 @@ namespace Colonize.Unit.Piece {
 	}
 
 	public abstract class PieceAction : UnitAction<PieceActionType, PieceController> {
-		protected static float checkMovePointDist = 10.0f;
+		protected static float checkMovePointDist = 20.0f;
 
 		protected readonly PieceStateController stateController;
 

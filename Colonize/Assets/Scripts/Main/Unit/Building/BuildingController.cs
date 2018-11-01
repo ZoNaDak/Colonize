@@ -41,7 +41,8 @@ namespace Colonize.Unit.Building {
 
 		//override
 		public override void OnDestroy() {
-			this.ClearObservers();
+			ClearObservers();
+			StopAllCoroutines();
 			if(IsMine()) {
 				buildingNumList[(int)this.status.type]--;
 			}

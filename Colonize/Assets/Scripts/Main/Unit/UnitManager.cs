@@ -54,7 +54,7 @@ namespace Colonize.Unit {
 		public bool RemoveUnit(TController _controller) {
 			try {
 				unitList.Remove(_controller);
-				Destroy(_controller.gameObject, 10.0f);
+				Destroy(_controller.gameObject, 0.1f);
 				_controller.gameObject.SetActive(false);
 			} catch(System.ArgumentNullException ex) {
 				throw ex;

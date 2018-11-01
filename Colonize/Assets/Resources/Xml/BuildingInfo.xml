@@ -25,6 +25,6 @@
         <ProducePieceId>2</ProducePieceId>
         <ProduceTime>3.0</ProduceTime>
         <HarvestGold>10</HarvestGold>
-        <Cost>80</Cost>
+        <Cost>20</Cost>
     </Building>
 </BuildingInfo>

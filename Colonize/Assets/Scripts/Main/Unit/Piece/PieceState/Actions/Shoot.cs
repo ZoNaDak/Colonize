@@ -1,12 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Colonize.Unit.Bullet;
 
 namespace Colonize.Unit.Piece {
     public class Shoot : PieceAction {
         private PieceController controller;
-
-        private static int checkableLayerMask = ~((1 << LayerMask.NameToLayer("Building")) | (1 << LayerMask.NameToLayer("Piece")));
 
         internal Shoot(PieceStateController _stateController)
          : base(PieceActionType.Attack, _stateController){
@@ -14,7 +13,7 @@ namespace Colonize.Unit.Piece {
         }
 
         private bool Attackable() {
-            Collider2D[] inAttackRange = Physics2D.OverlapCircleAll(this.controller.transform.position, this.controller.Status.attackRange, checkableLayerMask);
+            Collider2D[] inAttackRange = Physics2D.OverlapCircleAll(this.controller.transform.position, this.controller.Status.attackRange, this.stateController.ChecakableLayerMask);
             for(int i = 0; i < inAttackRange.Length; ++i) {
                 if(inAttackRange[i].gameObject == this.stateController.TargetUnit.GetGameObject()) {
                     return true;
@@ -36,7 +35,10 @@ namespace Colonize.Unit.Piece {
                 }
                 
                 if(this.Attackable()) {
-                    this.stateController.TargetUnit.Damaged(this.controller.Status.attack);
+                    Arrow arrow = PhotonNetwork.Instantiate("Prefabs/Bullets/Arrow",
+                        this.controller.transform.position, Quaternion.identity, 0).GetComponentInChildren<Arrow>();
+                    arrow.Init(this.stateController.TargetUnit.GetGameObject().GetComponentInChildren<IUnit>(),
+                        this.controller.Status.attack);
                     yield return new WaitForSecondsRealtime(this.controller.Status.attackCooltime);
                 } else {
                     Vector2 moveDir = this.stateController.TargetUnit.GetPos() - (Vector2)this.controller.transform.position;

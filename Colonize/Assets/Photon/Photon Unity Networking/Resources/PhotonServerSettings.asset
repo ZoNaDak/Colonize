@@ -39,4 +39,6 @@ MonoBehaviour:
   - SetData
   - SetDataOnPhoton
   - DamagedOnPhoton
+  - SetDeadOnPhoton
+  - SetDestroyOnPhoton
   DisableAutoOpenWizard: 1

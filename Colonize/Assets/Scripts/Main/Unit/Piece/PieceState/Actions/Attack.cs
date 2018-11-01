@@ -6,15 +6,13 @@ namespace Colonize.Unit.Piece {
     public class Attack : PieceAction {
         private PieceController controller;
 
-        private static int checkableLayerMask = ~((1 << LayerMask.NameToLayer("Building")) | (1 << LayerMask.NameToLayer("Piece")));
-
         internal Attack(PieceStateController _stateController)
          : base(PieceActionType.Attack, _stateController){
             this.controller = _stateController.Controller;
         }
 
         private bool Attackable() {
-            Collider2D[] inAttackRange = Physics2D.OverlapCircleAll(this.controller.transform.position, this.controller.Status.attackRange, checkableLayerMask);
+            Collider2D[] inAttackRange = Physics2D.OverlapCircleAll(this.controller.transform.position, this.controller.Status.attackRange, this.stateController.ChecakableLayerMask);
             for(int i = 0; i < inAttackRange.Length; ++i) {
                 if(inAttackRange[i].gameObject == this.stateController.TargetUnit.GetGameObject()) {
                     return true;

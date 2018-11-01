@@ -45,6 +45,7 @@ namespace Colonize.Unit.Piece {
 
 		internal void SetDead() {
 			this.dead = true;
+			this.photonView.RPC("SetDeadOnPhoton", PhotonTargets.Others);
 		}
 
 		public void SetMoveState(List<Vector2> _movePosList) {
@@ -59,7 +60,8 @@ namespace Colonize.Unit.Piece {
 
 		//override
 		public override void OnDestroy() {
-			this.ClearObservers();
+			ClearObservers();
+			StopAllCoroutines();
 			if(IsMine()) {
 				pieceNumList[(int)this.status.type]--;
 			}
@@ -88,7 +90,11 @@ namespace Colonize.Unit.Piece {
 
 		//Photon
 		public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
-			
+	
+		}
+
+		[PunRPC] private void SetDeadOnPhoton() {
+			this.dead = true;
 		}
 
 		[PunRPC]
